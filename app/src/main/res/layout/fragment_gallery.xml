@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center|top"
+    android:background="#FFFFFF"
+    tools:context=".ui.gallery.GalleryFragment">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="411dp"
+        android:layout_height="467dp"
+        android:gravity="bottom|center"
+        android:orientation="vertical"
+        android:translationY="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBarCard">
+
+        <ScrollView
+            android:id="@+id/scrollView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/summaryCard"
+                    android:layout_width="328dp"
+                    android:layout_height="68dp"
+                    android:layout_gravity="center|top"
+                    android:background="#EAE8E0"
+                    app:cardBackgroundColor="#EAE8E0"
+                    app:cardCornerRadius="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/space"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/summaryFileName"
+                            android:layout_width="264dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="14dp"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="Calculus 1"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toTopOf="@+id/modifiedDate"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/modifiedDate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginBottom="13dp"
+                            android:fontFamily="@font/roboto"
+                            android:text="Date: 17-03-2023"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <CheckBox
+                            android:id="@+id/summaryIsSelected"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="76dp"
+                            android:layout_marginBottom="12dp"
+                            android:translationX="65dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:useMaterialThemeColors="true" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <Space
+                    android:id="@+id/space"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/summaryCard" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/summaryCard2"
+                    android:layout_width="328dp"
+                    android:layout_height="68dp"
+                    android:layout_gravity="center|top"
+                    android:background="#EAE8E0"
+                    app:cardBackgroundColor="#EAE8E0"
+                    app:cardCornerRadius="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/space"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/summaryFileName2"
+                            android:layout_width="264dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="14dp"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="Ray Optics"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toTopOf="@+id/modifiedDate2"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/modifiedDate2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginBottom="13dp"
+                            android:fontFamily="@font/roboto"
+                            android:text="Date: 23-03-2023"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <CheckBox
+                            android:id="@+id/summaryIsSelected2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="76dp"
+                            android:layout_marginBottom="12dp"
+                            android:translationX="65dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+                <Space
+                    android:id="@+id/space2"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/summaryCard2" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/summaryCard3"
+                    android:layout_width="328dp"
+                    android:layout_height="68dp"
+                    android:layout_gravity="center|top"
+                    android:background="#EAE8E0"
+                    app:cardBackgroundColor="#EAE8E0"
+                    app:cardCornerRadius="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/space"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/summaryFileName3"
+                            android:layout_width="264dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="14dp"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="Electromagnetism"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toTopOf="@+id/modifiedDate3"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/modifiedDate3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginBottom="13dp"
+                            android:fontFamily="@font/roboto"
+                            android:text="Date: 01-01-2023"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <CheckBox
+                            android:id="@+id/summaryIsSelected3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="76dp"
+                            android:layout_marginBottom="12dp"
+                            android:translationX="65dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <Space
+                    android:id="@+id/space3"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/summaryCard3" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/summaryCard4"
+                    android:layout_width="328dp"
+                    android:layout_height="68dp"
+                    android:layout_gravity="center|top"
+                    android:background="#EAE8E0"
+                    app:cardBackgroundColor="#EAE8E0"
+                    app:cardCornerRadius="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/space3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/summaryFileName4"
+                            android:layout_width="264dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="14dp"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="Compton Effect"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toTopOf="@+id/modifiedDate4"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/modifiedDate4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginBottom="13dp"
+                            android:fontFamily="@font/roboto"
+                            android:text="Date: 15-02-2023"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <CheckBox
+                            android:id="@+id/summaryIsSelected4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="76dp"
+                            android:layout_marginBottom="12dp"
+                            android:translationX="65dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <Space
+                    android:id="@+id/space4"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/summaryCard4" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/summaryCard5"
+                    android:layout_width="328dp"
+                    android:layout_height="68dp"
+                    android:layout_gravity="center|top"
+                    android:background="#EAE8E0"
+                    app:cardBackgroundColor="#EAE8E0"
+                    app:cardCornerRadius="20dp"
+                    app:layout_constraintBottom_toTopOf="@+id/space4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:id="@+id/summaryFileName5"
+                            android:layout_width="264dp"
+                            android:layout_height="24dp"
+                            android:layout_marginStart="14dp"
+                            android:fontFamily="@font/roboto_bold"
+                            android:text="First Order Differential Equations"
+                            android:textSize="16sp"
+                            app:layout_constraintBottom_toTopOf="@+id/modifiedDate5"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <TextView
+                            android:id="@+id/modifiedDate5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_marginBottom="13dp"
+                            android:fontFamily="@font/roboto"
+                            android:text="Date: 17-03-2023"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                        <CheckBox
+                            android:id="@+id/summaryIsSelected5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="76dp"
+                            android:layout_marginBottom="12dp"
+                            android:translationX="65dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
+
+                <Space
+                    android:id="@+id/space5"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/summaryCard5" />
+
+
+            </LinearLayout>
+
+
+
+        </ScrollView>
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/searchBarCard"
+        android:layout_width="328dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginEnd="39dp"
+        android:layout_marginBottom="102dp"
+        android:foregroundGravity="top|center"
+        android:translationY="80dp"
+        app:cardBackgroundColor="#EAE8E0"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/baseline_search_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/summarySearchEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="7dp"
+                android:width="248dp"
+                android:height="32dp"
+                android:background="@null"
+                android:ems="10"
+                android:hint="Search My Summaries"
+                android:inputType="text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.368"
+                app:layout_constraintStart_toEndOf="@+id/searchIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.571" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

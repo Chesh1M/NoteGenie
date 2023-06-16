@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/baseline_home_icon"
+            android:title="@string/menu_home" />
+        <item
+            android:id="@+id/nav_summaries"
+            android:icon="@drawable/baseline_summaries_icon"
+            android:title="@string/menu_summaries" />
+        <item
+            android:id="@+id/nav_flashcards"
+            android:icon="@drawable/baseline_flashcard_icon"
+            android:title="@string/flashcards_text" />
+    </group>
+</menu>
