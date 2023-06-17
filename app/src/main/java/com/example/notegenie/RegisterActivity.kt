@@ -1,5 +1,7 @@
 package com.example.notegenie
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Patterns
@@ -48,7 +50,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
         if (value.isEmpty()){
             errorMessage  = "Email is required"
         }
-        else if (Patterns.EMAIL_ADDRESS.matcher(value).matches()) { // if email entered is a valid email address
+        else if (!Patterns.EMAIL_ADDRESS.matcher(value).matches()) { // if email entered is a valid email address
             errorMessage = "Email address is invalid"
         }
 
@@ -128,11 +130,13 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
         TODO("Haven't done")
     }
 
+    /* EFFECTS FOR CORRECTLY/INCORRECTLY FILLED FIELDS */
     override fun onFocusChange(view: View?, hasFocus: Boolean) {
         if (view != null) {
             when(view.id) {
+                // Full name field
                 R.id.fullNameEt -> {
-                    if (hasFocus) {
+                    if (hasFocus) { // remove error if field on focus
                         if (mBinding.fullNameTil.isErrorEnabled){
                             mBinding.fullNameTil.isErrorEnabled = false
                         }
@@ -140,36 +144,61 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
                         validateFullName()
                     }
                 }
+
+                // Email field
                 R.id.emailEt -> {
-                    if (hasFocus) {
+                    if (hasFocus) { // remove error if field on focus
                         if (mBinding.emailTil.isErrorEnabled){
                             mBinding.emailTil.isErrorEnabled = false
                         }
-                    } else {
-                        validateEmail()
+                    } else { // else validate email keyed in when not in focus
+                        if (validateEmail()) {
+                            // do validation for its uniqueness
+                        }
                     }
                 }
+
+                // Password field
                 R.id.passwordEt -> {
-                    if (hasFocus) {
+                    if (hasFocus) { // remove error if field on focus
                         if (mBinding.passwordTil.isErrorEnabled){
                             mBinding.passwordTil.isErrorEnabled = false
                         }
-                    } else {
-                        validatePassword()
+                    } else { // else apply style based on correctly/incorrectly filled field
+                        if (validatePassword() && mBinding.cPasswordEt.text!!.isNotEmpty() && validateConfirmPassword() && validatePasswordAndConfirmPassword()){
+                            if (mBinding.cPasswordTil.isErrorEnabled) {
+                                mBinding.cPasswordTil.isErrorEnabled = false
+                            }
+                            mBinding.cPasswordTil.apply {
+                                setStartIconDrawable(R.drawable.check_circle_24)
+                                setStartIconTintList(ColorStateList.valueOf(Color.GREEN))
+                            }
+                        }
                     }
                 }
+
+                // Confirm password field
                 R.id.cPasswordEt -> {
-                    if (hasFocus) {
+                    if (hasFocus) { // remove error if field on focus
                         if (mBinding.cPasswordTil.isErrorEnabled){
                             mBinding.cPasswordTil.isErrorEnabled = false
                         }
-                    } else {
-                        validateConfirmPassword()
+                    } else { // else apply style based on correctly/incorrectly filled field
+                        if (validateConfirmPassword() && validatePassword() && validatePasswordAndConfirmPassword()) {
+                            if (mBinding.passwordTil.isErrorEnabled) {
+                                mBinding.passwordTil.isErrorEnabled = false
+                            }
+                            mBinding.cPasswordTil.apply {
+                                setStartIconDrawable(R.drawable.check_circle_24)
+                                setStartIconTintList(ColorStateList.valueOf(Color.GREEN))
+                            }
+                        }
                     }
                 }
             }
         }
     }
+    /* // EFFECTS FOR CORRECTLY/INCORRECTLY FILLED FIELDS */
 
     override fun onKey(view: View?, event: Int, keyEvent: KeyEvent?): Boolean {
         return false
