@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "625096521705",
+    "firebase_url": "https://notegenie-fe00b-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "notegenie-fe00b",
+    "storage_bucket": "notegenie-fe00b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625096521705:android:9c2440ce0b1c11f74f7d78",
+        "android_client_info": {
+          "package_name": "com.example.notegenie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "625096521705-h91nobp2tpsen4mluhv0nv3savif6919.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkH4C9L87VNSPIzK_pWZUHcmpIfsubxOQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "625096521705-h91nobp2tpsen4mluhv0nv3savif6919.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
