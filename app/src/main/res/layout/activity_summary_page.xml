@@ -30,21 +30,21 @@
         android:layout_width="209dp"
         android:layout_height="57dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="41dp"
-        android:layout_marginEnd="186dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="103dp"
         android:fontFamily="@font/manrope_extrabold"
         android:gravity="left"
         android:text="Summaries"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appTitle" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="408dp"
+        android:layout_height="450dp"
         android:layout_marginBottom="18dp"
         android:translationY="-10dp"
         app:layout_constraintBottom_toTopOf="@+id/generateSummaryButton"
@@ -56,6 +56,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:backgroundTint="#414C6B"
+            android:divider="@null"
+            android:dividerHeight="0dp"
             tools:listitem="@layout/activity_summary_card">
 
         </ListView>
@@ -68,7 +70,6 @@
         android:layout_marginStart="45dp"
         android:layout_marginTop="6dp"
         android:layout_marginEnd="38dp"
-        android:layout_marginBottom="110dp"
         android:foregroundGravity="top|center"
         android:translationY="10dp"
         app:cardBackgroundColor="#EAE8E0"
@@ -99,21 +100,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="28dp"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="50dp"
-                android:layout_marginBottom="7dp"
                 android:width="248dp"
                 android:height="32dp"
                 android:background="@null"
                 android:ems="10"
                 android:hint="Search My Summaries"
                 android:inputType="text"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.368"
+                app:layout_constraintHorizontal_bias="0.421"
                 app:layout_constraintStart_toEndOf="@+id/searchIcon"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.571" />
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -129,5 +127,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/_dynamic" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="85dp"
+        android:layout_marginEnd="59dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_menu" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
