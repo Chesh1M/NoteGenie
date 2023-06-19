@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom|center"
+    android:background="#414C6B"
+    android:backgroundTint="#414C6B"
+    tools:context=".SummariesPage">
+
+    <TextView
+        android:id="@+id/appTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="-30dp"
+        android:width="209dp"
+        android:height="57dp"
+        android:fontFamily="@font/manrope_extrabold"
+        android:text="Notegenie"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.068"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/summariesTextView"
+        android:layout_width="209dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="186dp"
+        android:fontFamily="@font/manrope_extrabold"
+        android:gravity="left"
+        android:text="Summaries"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appTitle" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="408dp"
+        android:layout_marginBottom="18dp"
+        android:translationY="-10dp"
+        app:layout_constraintBottom_toTopOf="@+id/generateSummaryButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ListView
+            android:id="@+id/listOfSummariesView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:backgroundTint="#414C6B"
+            tools:listitem="@layout/activity_summary_card">
+
+        </ListView>
+    </RelativeLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/searchBarCard"
+        android:layout_width="328dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginBottom="110dp"
+        android:foregroundGravity="top|center"
+        android:translationY="10dp"
+        app:cardBackgroundColor="#EAE8E0"
+        app:cardCornerRadius="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/_dynamic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/summariesTextView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/baseline_search_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/summarySearchEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="50dp"
+                android:layout_marginBottom="7dp"
+                android:width="248dp"
+                android:height="32dp"
+                android:background="@null"
+                android:ems="10"
+                android:hint="Search My Summaries"
+                android:inputType="text"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.368"
+                app:layout_constraintStart_toEndOf="@+id/searchIcon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.571" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/generateSummaryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#FFE45C"
+        android:text="Generate New Summary"
+        android:textColor="#000000"
+        android:translationY="-10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/_dynamic" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
