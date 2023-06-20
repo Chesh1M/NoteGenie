@@ -4,13 +4,15 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Patterns
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import com.example.notegenie.databinding.ActivityRegisterBinding
 
-class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener, View.OnKeyListener {
+class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener, View.OnKeyListener, TextWatcher {
 
     private lateinit var mBinding: ActivityRegisterBinding
 
@@ -22,6 +24,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
         mBinding.emailEt.onFocusChangeListener = this
         mBinding.passwordEt.onFocusChangeListener = this
         mBinding.cPasswordEt.onFocusChangeListener = this
+        mBinding.cPasswordEt.addTextChangedListener(this)
     }
 
     /* REGISTRATION FIELDS VALIDATION */
@@ -44,7 +47,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     }
 
     // Validate email
-    private fun validateEmail(): Boolean {
+    private fun validateEmail(shouldUpdateView: Boolean = true): Boolean {
         var errorMessage: String? = null
         val value = mBinding.emailEt.text.toString()
         if (value.isEmpty()){
@@ -65,7 +68,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     }
 
     // Validate password
-    private fun validatePassword(): Boolean {
+    private fun validatePassword(shouldUpdateView: Boolean = true): Boolean {
         var errorMessage: String? = null
         val value = mBinding.passwordEt.text.toString()
         if (value.isEmpty()){
@@ -76,7 +79,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
         }
 
         // if validation fails
-        if (errorMessage != null){
+        if (errorMessage != null && shouldUpdateView){
             mBinding.passwordTil.apply {
                 isErrorEnabled = true
                 error = errorMessage
@@ -86,7 +89,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     }
 
     // Validate confirm password
-    private fun validateConfirmPassword(): Boolean {
+    private fun validateConfirmPassword(shouldUpdateView: Boolean = true): Boolean {
         var errorMessage: String? = null
         val value = mBinding.cPasswordEt.text.toString()
         if (value.isEmpty()){
@@ -97,7 +100,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
         }
 
         // if validation fails
-        if (errorMessage != null){
+        if (errorMessage != null && shouldUpdateView){
             mBinding.cPasswordTil.apply {
                 isErrorEnabled = true
                 error = errorMessage
@@ -107,16 +110,16 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     }
 
     // Validate password and confirm password
-    private fun validatePasswordAndConfirmPassword(): Boolean {
+    private fun validatePasswordAndConfirmPassword(shouldUpdateView: Boolean = true): Boolean {
         var errorMessage: String? = null
         val password = mBinding.passwordEt.text.toString()
         val confirmPassword = mBinding.cPasswordEt.text.toString()
-        if (password != confirmPassword){
+        if (password != confirmPassword) {
             errorMessage = "Confirm password and password do not match!"
         }
 
         // if validation fails
-        if (errorMessage != null){
+        if (errorMessage != null && shouldUpdateView){
             mBinding.cPasswordTil.apply {
                 isErrorEnabled = true
                 error = errorMessage
@@ -202,5 +205,27 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
 
     override fun onKey(view: View?, event: Int, keyEvent: KeyEvent?): Boolean {
         return false
+    }
+
+    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        {}
+    }
+
+    // On text listener to provide green checkmark when user enters confirm password correctly for each keystroke
+    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        if (validatePassword(shouldUpdateView = false) && validateConfirmPassword(shouldUpdateView = false) && validatePasswordAndConfirmPassword(shouldUpdateView = false)) {
+            mBinding.cPasswordTil.apply {
+                if (isErrorEnabled) isErrorEnabled = false
+                setStartIconDrawable(R.drawable.check_circle_24)
+                setStartIconTintList(ColorStateList.valueOf(Color.GREEN))
+            }
+        } else {
+            if (mBinding.cPasswordTil.startIconDrawable != null)
+                mBinding.cPasswordTil.startIconDrawable = null
+        }
+    }
+
+    override fun afterTextChanged(p0: Editable?) {
+        { }
     }
 }
