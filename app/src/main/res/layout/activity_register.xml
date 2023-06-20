@@ -90,7 +90,8 @@
                 android:layout_height="wrap_content"
                 app:passwordToggleEnabled="true"
                 app:counterEnabled="true"
-                app:counterMaxLength="15">
+                app:counterMaxLength="15"
+                android:layout_marginTop="8dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/cPasswordEt"
@@ -110,7 +111,7 @@
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="30dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
                 android:text="@string/register"

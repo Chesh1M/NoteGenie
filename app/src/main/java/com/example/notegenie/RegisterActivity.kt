@@ -24,7 +24,9 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
         mBinding.emailEt.onFocusChangeListener = this
         mBinding.passwordEt.onFocusChangeListener = this
         mBinding.cPasswordEt.onFocusChangeListener = this
+        mBinding.cPasswordEt.setOnKeyListener(this)
         mBinding.cPasswordEt.addTextChangedListener(this)
+        mBinding.registerBtn.setOnClickListener(this)
     }
 
     /* REGISTRATION FIELDS VALIDATION */
@@ -130,7 +132,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     /* // REGISTRATION FIELDS VALIDATION */
 
     override fun onClick(view: View?) {
-        TODO("Haven't done")
+        if (view != null && view.id == R.id.registerBtn)
+            onSubmit()
     }
 
     /* EFFECTS FOR CORRECTLY/INCORRECTLY FILLED FIELDS */
@@ -203,7 +206,10 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     }
     /* // EFFECTS FOR CORRECTLY/INCORRECTLY FILLED FIELDS */
 
-    override fun onKey(view: View?, event: Int, keyEvent: KeyEvent?): Boolean {
+    override fun onKey(view: View?, keyCode: Int, keyEvent: KeyEvent?): Boolean {
+        if (KeyEvent.KEYCODE_ENTER ==  keyCode && keyEvent!!.action == KeyEvent.ACTION_UP) {
+            // do registration
+        }
         return false
     }
 
@@ -227,5 +233,22 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
 
     override fun afterTextChanged(p0: Editable?) {
         { }
+    }
+
+    private fun onSubmit() {
+        if (validate()) {
+            // make api request
+        }
+    }
+
+    private fun validate(): Boolean {
+        var isValid = true
+
+        if (!validateFullName()) isValid = false
+        if (!validateEmail()) isValid = false
+        if (!validatePassword()) isValid = false
+        if (!validateConfirmPassword()) isValid = false
+        if (isValid && !validatePasswordAndConfirmPassword()) isValid = false
+        return isValid
     }
 }
