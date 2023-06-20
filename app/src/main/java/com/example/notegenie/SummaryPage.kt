@@ -3,7 +3,11 @@ package com.example.notegenie
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
+import android.widget.ImageView
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.notegenie.databinding.ActivitySummaryPageBinding
 import com.google.firebase.database.DataSnapshot
@@ -37,22 +41,54 @@ class SummaryPage : AppCompatActivity() {
         binding = ActivitySummaryPageBinding.inflate(this.layoutInflater)
         setContentView(binding.root)
 
-        // Getting all of the data from the Firebase Database
 
-        // Initializing the Database
+        // Initializing the pop-up menu
 
-//        database = Firebase.database.reference
-//
-//        // Getting the values from the database
-//        database.child("Summaries").get().addOnSuccessListener {
-//            Log.i("firebase", "Got value ${it.value}")
-//
-//            // Converting the values into pairs
-//            Log.i("The Hash code",  )
-//
-//        }.addOnFailureListener{
-//            Log.e("firebase", "Error getting data", it)
-//        }
+        // Firstly initializing the widget
+        val navigatePagesMenuView: ImageView = findViewById(R.id.navigatePagesMenu)
+
+        // Now initializing the pop-up menu
+        val navPopupMenu = PopupMenu(this, navigatePagesMenuView)
+
+        // Adding the elements of the popup menu
+        navPopupMenu.menu.add(Menu.NONE, 0, 0, "Home")
+        navPopupMenu.menu.add(Menu.NONE, 1, 1, "Summaries")
+        navPopupMenu.menu.add(Menu.NONE, 2, 2, "Flashcards")
+
+        // Handling item clicks
+        navPopupMenu.setOnMenuItemClickListener { menuItem->
+
+            // Getting id of menu
+            val menuID = menuItem.itemId
+
+
+            // Handling navigation
+            if (menuID==0){
+
+                // Initializing an intent to switch activity
+                val switchActivity = Intent(this, HomePage::class.java)
+                startActivity(switchActivity)
+
+            } else if(menuID==1){
+                // Initializing an intent to switch activity
+                val switchActivity = Intent(this, SummaryPage::class.java)
+                startActivity(switchActivity)
+
+            } else if(menuID==2){
+                // Initializing an intent to switch activity
+                val switchActivity = Intent(this, FlashcardsPage::class.java)
+                startActivity(switchActivity)
+            }
+
+            false
+
+
+        }
+
+        // Setting an on click listener for the popup view
+        navigatePagesMenuView.setOnClickListener{
+            navPopupMenu.show()
+        }
 
 
 

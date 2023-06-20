@@ -37,21 +37,20 @@
         android:fontFamily="@font/manrope_extrabold"
         android:gravity="left"
         android:text="Summaries"
-        android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/searchBarCard"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintEnd_toStartOf="@+id/navigatePagesMenu"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appTitle" />
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="500dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="18dp"
-        android:translationY="-10dp"
-        app:layout_constraintBottom_toTopOf="@+id/generateSummaryButton"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchBarCard">
@@ -120,21 +119,10 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <Button
-        android:id="@+id/generateSummaryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#FFE45C"
-        android:text="Generate New Summary"
-        android:textColor="#000000"
-        android:translationY="-10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/_dynamic" />
+
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/navigatePagesMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="85dp"
