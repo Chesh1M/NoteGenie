@@ -1,8 +1,8 @@
 package com.example.notegenie
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,10 +11,12 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.notegenie.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener, View.OnKeyListener, TextWatcher {
+class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener,
+    View.OnKeyListener, TextWatcher {
 
     private lateinit var mBinding: ActivityRegisterBinding
 
@@ -32,22 +34,25 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
         mBinding.cPasswordEt.setOnKeyListener(this)
         mBinding.cPasswordEt.addTextChangedListener(this)
         mBinding.registerBtn.setOnClickListener(this)
-
+        mBinding.backToSignInBtn.setOnClickListener {
+            val intent = Intent(this, SignInActivity::class.java)
+            startActivity(intent)
+        }
         // Firebase
         firebaseAuth = FirebaseAuth.getInstance()
     }
 
     /* REGISTRATION FIELDS VALIDATION */
     // Validate full name
-    private fun validateFullName(): Boolean{
+    private fun validateFullName(): Boolean {
         var errorMessage: String? = null
         val value: String = mBinding.fullNameEt.text.toString()
-        if (value.isEmpty()){
+        if (value.isEmpty()) {
             errorMessage = "Full name is required"
         }
 
         // if validation fails
-        if (errorMessage != null){
+        if (errorMessage != null) {
             mBinding.fullNameTil.apply {
                 isErrorEnabled = true
                 error = errorMessage
@@ -57,18 +62,19 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     }
 
     // Validate email
-    private fun validateEmail(shouldUpdateView: Boolean = true): Boolean {
+    private fun validateEmail(): Boolean {
         var errorMessage: String? = null
         val value = mBinding.emailEt.text.toString()
-        if (value.isEmpty()){
-            errorMessage  = "Email is required"
-        }
-        else if (!Patterns.EMAIL_ADDRESS.matcher(value).matches()) { // if email entered is a valid email address
+        if (value.isEmpty()) {
+            errorMessage = "Email is required"
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(value)
+                .matches()
+        ) { // if email entered is a valid email address
             errorMessage = "Email address is invalid"
         }
 
         // if validation fails
-        if (errorMessage != null){
+        if (errorMessage != null) {
             mBinding.emailTil.apply {
                 isErrorEnabled = true
                 error = errorMessage
@@ -81,15 +87,14 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     private fun validatePassword(shouldUpdateView: Boolean = true): Boolean {
         var errorMessage: String? = null
         val value = mBinding.passwordEt.text.toString()
-        if (value.isEmpty()){
-            errorMessage  = "Password is required"
-        }
-        else if (value.length < 6) { // if email entered is a valid email address
+        if (value.isEmpty()) {
+            errorMessage = "Password is required"
+        } else if (value.length < 6) { // if email entered is a valid email address
             errorMessage = "Password must be at least 6 characters long"
         }
 
         // if validation fails
-        if (errorMessage != null && shouldUpdateView){
+        if (errorMessage != null && shouldUpdateView) {
             mBinding.passwordTil.apply {
                 isErrorEnabled = true
                 error = errorMessage
@@ -102,15 +107,14 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     private fun validateConfirmPassword(shouldUpdateView: Boolean = true): Boolean {
         var errorMessage: String? = null
         val value = mBinding.cPasswordEt.text.toString()
-        if (value.isEmpty()){
-            errorMessage  = "Confirm Password is required"
-        }
-        else if (value.length < 6) { // if email entered is a valid email address
+        if (value.isEmpty()) {
+            errorMessage = "Confirm Password is required"
+        } else if (value.length < 6) { // if email entered is a valid email address
             errorMessage = "Confirm Password must be at least 6 characters long"
         }
 
         // if validation fails
-        if (errorMessage != null && shouldUpdateView){
+        if (errorMessage != null && shouldUpdateView) {
             mBinding.cPasswordTil.apply {
                 isErrorEnabled = true
                 error = errorMessage
@@ -129,7 +133,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
         }
 
         // if validation fails
-        if (errorMessage != null && shouldUpdateView){
+        if (errorMessage != null && shouldUpdateView) {
             mBinding.cPasswordTil.apply {
                 isErrorEnabled = true
                 error = errorMessage
@@ -147,11 +151,11 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     /* EFFECTS FOR CORRECTLY/INCORRECTLY FILLED FIELDS */
     override fun onFocusChange(view: View?, hasFocus: Boolean) {
         if (view != null) {
-            when(view.id) {
+            when (view.id) {
                 // Full name field
                 R.id.fullNameEt -> {
                     if (hasFocus) { // remove error if field on focus
-                        if (mBinding.fullNameTil.isErrorEnabled){
+                        if (mBinding.fullNameTil.isErrorEnabled) {
                             mBinding.fullNameTil.isErrorEnabled = false
                         }
                     } else {
@@ -162,12 +166,12 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
                 // Email field
                 R.id.emailEt -> {
                     if (hasFocus) { // remove error if field on focus
-                        if (mBinding.emailTil.isErrorEnabled){
+                        if (mBinding.emailTil.isErrorEnabled) {
                             mBinding.emailTil.isErrorEnabled = false
                         }
                     } else { // else validate email keyed in when not in focus
                         if (validateEmail()) {
-                            // do validation for its uniqueness
+                            // TODO do validation for uniqueness of email
                         }
                     }
                 }
@@ -175,11 +179,11 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
                 // Password field
                 R.id.passwordEt -> {
                     if (hasFocus) { // remove error if field on focus
-                        if (mBinding.passwordTil.isErrorEnabled){
+                        if (mBinding.passwordTil.isErrorEnabled) {
                             mBinding.passwordTil.isErrorEnabled = false
                         }
                     } else { // else apply style based on correctly/incorrectly filled field
-                        if (validatePassword() && mBinding.cPasswordEt.text!!.isNotEmpty() && validateConfirmPassword() && validatePasswordAndConfirmPassword()){
+                        if (validatePassword() && mBinding.cPasswordEt.text!!.isNotEmpty() && validateConfirmPassword() && validatePasswordAndConfirmPassword()) {
                             if (mBinding.cPasswordTil.isErrorEnabled) {
                                 mBinding.cPasswordTil.isErrorEnabled = false
                             }
@@ -194,7 +198,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
                 // Confirm password field
                 R.id.cPasswordEt -> {
                     if (hasFocus) { // remove error if field on focus
-                        if (mBinding.cPasswordTil.isErrorEnabled){
+                        if (mBinding.cPasswordTil.isErrorEnabled) {
                             mBinding.cPasswordTil.isErrorEnabled = false
                         }
                     } else { // else apply style based on correctly/incorrectly filled field
@@ -215,7 +219,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     /* // EFFECTS FOR CORRECTLY/INCORRECTLY FILLED FIELDS */
 
     override fun onKey(view: View?, keyCode: Int, keyEvent: KeyEvent?): Boolean {
-        if (KeyEvent.KEYCODE_ENTER ==  keyCode && keyEvent!!.action == KeyEvent.ACTION_UP) {
+        if (KeyEvent.KEYCODE_ENTER == keyCode && keyEvent!!.action == KeyEvent.ACTION_UP) {
             // do registration
         }
         return false
@@ -227,7 +231,10 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
 
     // On text listener to provide green checkmark when user enters confirm password correctly for each keystroke
     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        if (validatePassword(shouldUpdateView = false) && validateConfirmPassword(shouldUpdateView = false) && validatePasswordAndConfirmPassword(shouldUpdateView = false)) {
+        if (validatePassword(shouldUpdateView = false) && validateConfirmPassword(shouldUpdateView = false) && validatePasswordAndConfirmPassword(
+                shouldUpdateView = false
+            )
+        ) {
             mBinding.cPasswordTil.apply {
                 if (isErrorEnabled) isErrorEnabled = false
                 setStartIconDrawable(R.drawable.check_circle_24)
@@ -240,7 +247,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     }
 
     override fun afterTextChanged(p0: Editable?) {
-        { }
+        {}
     }
 
     private fun onSubmit() {
@@ -254,7 +261,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
             firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
                 if (it.isSuccessful) {
                     // Redirect to Sign Up screen
-
+                    startActivity(Intent(this, SignInActivity::class.java))
+                    Toast.makeText(this, "Account successfully created!", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
                 }

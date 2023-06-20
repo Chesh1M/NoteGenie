@@ -22,23 +22,6 @@
             android:layout_margin="16dp"
             android:orientation="vertical">
 
-            <!-- FULL NAME FIELD -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/fullNameTil"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/fullNameEt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/full_name"
-                    android:inputType="text"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="12dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-            <!-- // FULL NAME FIELD -->
 
             <!-- EMAIL FIELD -->
             <com.google.android.material.textfield.TextInputLayout
@@ -82,43 +65,36 @@
             </com.google.android.material.textfield.TextInputLayout>
             <!-- // PASSWORD FIELD -->
 
-            <!-- CONFIRM PASSWORD FIELD -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cPasswordTil"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                app:counterEnabled="true"
-                app:counterMaxLength="15"
-                app:passwordToggleEnabled="true">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/cPasswordEt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/confirm_password"
-                    android:inputType="textPassword"
-                    android:maxLength="15"
-                    android:paddingHorizontal="8dp"
-                    android:paddingVertical="12dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-            <!-- // CONFIRM PASSWORD FIELD -->
-
-            <!-- REGISTER BUTTON -->
+            <!-- LOGIN BUTTON -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/registerBtn"
+                android:id="@+id/loginBtn"
                 style="@style/Widget.MaterialComponents.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:text="@string/register"
+                android:text="@string/login"
                 app:cornerRadius="0dp" />
-            <!-- // REGISTER BUTTON -->
+            <!-- // LOGIN BUTTON -->
 
-            <!-- BACK TO SIGN IN BUTTON -->
+            <!-- GOOGLE LOGIN BUTTON -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginWithGoogleBtn"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton.Icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/loginWithGoogle"
+                app:cornerRadius="0dp"
+                app:icon="@drawable/google"
+                app:iconSize="24dp"
+                app:iconTint="@null" />
+            <!-- // GOOGLE LOGIN BUTTON -->
+
+            <!-- NEW USER REGISTER BUTTON -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,20 +103,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/existingAccountInfo" />
+                    android:text="@string/newUserInfo" />
 
                 <TextView
-                    android:id="@+id/backToSignInBtn"
+                    android:id="@+id/registerBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="8dp"
                     android:layout_marginStart="4dp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:text="@string/signIn"
+                    android:text="@string/register"
                     android:textColor="@color/purple_700" />
             </LinearLayout>
-            <!-- // BACK TO SIGN IN REGISTER BUTTON -->
+            <!-- // NEW USER REGISTER BUTTON -->
 
         </LinearLayout>
         <!-- // REGISTRATION DETAILS CONTAINER  -->

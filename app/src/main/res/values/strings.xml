@@ -5,4 +5,10 @@
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="register">Register</string>
+    <string name="signIn">Sign in here!</string>
+    <string name="login">LOGIN</string>
+    <string name="logout">LOGOUT</string>
+    <string name="loginWithGoogle">LOGIN WITH GOOGLE</string>
+    <string name="newUserInfo">If you are a new user, click</string>
+    <string name="existingAccountInfo">Already have an account?</string>
 </resources>
