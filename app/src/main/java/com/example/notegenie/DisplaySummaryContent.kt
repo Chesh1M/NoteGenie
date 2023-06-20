@@ -178,7 +178,7 @@ class DisplaySummaryContent : AppCompatActivity() {
                 Toast.makeText(this, "Language Changed to Spanish",
                     Toast.LENGTH_SHORT).show()
 
-                // Create an English-Tamil translator:
+                // Create an English-Spanish translator:
                 val options = TranslatorOptions.Builder()
                     .setSourceLanguage(TranslateLanguage.ENGLISH)
                     .setTargetLanguage(TranslateLanguage.SPANISH)
@@ -225,6 +225,11 @@ class DisplaySummaryContent : AppCompatActivity() {
 
 
 
+
+    }
+
+    // Function to export to pdf
+    fun exportToPDF(view: View){
 
     }
 }
