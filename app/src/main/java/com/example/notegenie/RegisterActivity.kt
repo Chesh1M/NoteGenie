@@ -10,11 +10,16 @@ import android.util.Patterns
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import com.example.notegenie.databinding.ActivityRegisterBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener, View.OnKeyListener, TextWatcher {
 
     private lateinit var mBinding: ActivityRegisterBinding
+
+    // Firebase
+    private lateinit var firebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +32,9 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
         mBinding.cPasswordEt.setOnKeyListener(this)
         mBinding.cPasswordEt.addTextChangedListener(this)
         mBinding.registerBtn.setOnClickListener(this)
+
+        // Firebase
+        firebaseAuth = FirebaseAuth.getInstance()
     }
 
     /* REGISTRATION FIELDS VALIDATION */
@@ -238,6 +246,19 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
     private fun onSubmit() {
         if (validate()) {
             // make api request
+
+
+            val email = mBinding.emailEt.text.toString()
+            val password = mBinding.passwordEt.text.toString()
+
+            firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener {
+                if (it.isSuccessful) {
+                    // Redirect to Sign Up screen
+
+                } else {
+                    Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
