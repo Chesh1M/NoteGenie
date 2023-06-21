@@ -22,23 +22,22 @@
             android:name=".SignInActivity"
             android:exported="true" />
         <activity
-            android:name=".StartActivity"
             android:name=".FlashcardsPage"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".HomePage"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".DisplaySummaryContent"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".SummaryCard"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".SummaryPage"
-            android:exported="false" />
+            android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name=".StartActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
