@@ -13,6 +13,9 @@
         android:theme="@style/Theme.NoteGenie"
         tools:targetApi="31">
         <activity
+            android:name=".LanguagesSetPage"
+            android:exported="false" />
+        <activity
             android:name=".SettingsPage"
             android:exported="false" />
         <activity
