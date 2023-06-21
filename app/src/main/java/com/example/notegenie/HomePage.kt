@@ -6,13 +6,28 @@ import android.os.Bundle
 import android.os.FileUtils
 import android.view.Menu
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.Toast
+import com.example.notegenie.databinding.ActivityHomePageBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class HomePage : AppCompatActivity() {
+    private lateinit var firebaseAuth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
+        firebaseAuth = FirebaseAuth.getInstance()
+        val logoutBtn = findViewById<Button>(R.id.logoutBtn)
+
+        // Logout button
+        logoutBtn.setOnClickListener {
+            val intent = Intent(this, StartActivity::class.java)
+            startActivity(intent)
+            FirebaseAuth.getInstance().signOut()
+            Toast.makeText(this, "Sign out success!", Toast.LENGTH_SHORT).show()
+        } // Logout button
 
         // Initializing the pop-up menu
 

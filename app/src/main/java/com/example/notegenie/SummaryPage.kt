@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.notegenie.databinding.ActivityRegisterBinding
 import com.example.notegenie.databinding.ActivitySummaryPageBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -35,13 +38,22 @@ class SummaryPage : AppCompatActivity() {
     // Database reference initialization
     private lateinit var database: DatabaseReference
 
+    // Firebase
+    private lateinit var firebaseAuth: FirebaseAuth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySummaryPageBinding.inflate(this.layoutInflater)
         setContentView(binding.root)
+        firebaseAuth = FirebaseAuth.getInstance()
 
-
+        binding.logoutBtn.setOnClickListener {
+            val intent = Intent(this, StartActivity::class.java)
+            startActivity(intent)
+            FirebaseAuth.getInstance().signOut()
+            Toast.makeText(this, "Sign out success!", Toast.LENGTH_SHORT).show()
+        }
         // Initializing the pop-up menu
 
         // Firstly initializing the widget

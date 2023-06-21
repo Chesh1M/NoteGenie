@@ -7,7 +7,7 @@
     android:layout_gravity="bottom|center"
     android:background="#414C6B"
     android:backgroundTint="#414C6B"
-    tools:context=".SummariesPage">
+    tools:context=".SummaryPage">
 
     <TextView
         android:id="@+id/appTitle"
@@ -17,9 +17,9 @@
         android:width="209dp"
         android:height="57dp"
         android:fontFamily="@font/manrope_extrabold"
-        android:text="Notegenie"
+        android:text="@string/app_name"
         android:textColor="#FFFFFF"
-        android:textSize="40sp"
+        android:textSize="35sp"
         app:layout_constraintBottom_toTopOf="@+id/summariesTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.068"
@@ -38,7 +38,7 @@
         android:gravity="left"
         android:text="Summaries"
         android:textColor="#FFFFFF"
-        android:textSize="30sp"
+        android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/searchBarCard"
         app:layout_constraintEnd_toStartOf="@+id/navigatePagesMenu"
         app:layout_constraintHorizontal_bias="0.0"
@@ -46,6 +46,7 @@
         app:layout_constraintTop_toBottomOf="@+id/appTitle" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_marginTop="30dp"
@@ -59,6 +60,7 @@
             android:id="@+id/listOfSummariesView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentBottom="false"
             android:backgroundTint="#414C6B"
             android:divider="@null"
             android:dividerHeight="0dp"
@@ -120,15 +122,37 @@
     </androidx.cardview.widget.CardView>
 
 
-
+    <!-- HAMBURGER MENU -->
     <ImageView
         android:id="@+id/navigatePagesMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="85dp"
-        android:layout_marginEnd="59dp"
+        android:layout_marginTop="90dp"
+        app:layout_constraintBottom_toTopOf="@+id/searchBarCard"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.894"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.026"
         app:srcCompat="@drawable/baseline_menu" />
+    <!-- // HAMBURGER MENU -->
+
+    <!-- LOGOUT BUTTON -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/logoutBtn"
+        style="@style/Widget.MaterialComponents.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:text="@string/logout"
+        app:cornerRadius="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/searchBarCard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.949"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.163" />
+    <!-- // LOGOUT BUTTON -->
 </androidx.constraintlayout.widget.ConstraintLayout>
 

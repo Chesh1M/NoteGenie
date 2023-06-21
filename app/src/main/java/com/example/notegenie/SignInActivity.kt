@@ -27,6 +27,7 @@ class SignInActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
                         val intent = Intent(this, HomePage::class.java)
                         startActivity(intent)
+                        Toast.makeText(this, "Sign in success!", Toast.LENGTH_SHORT).show()
                     } else {
                         Toast.makeText(this, "Incorrect Email or Password keyed in!", Toast.LENGTH_SHORT).show()
                     }
@@ -42,7 +43,7 @@ class SignInActivity : AppCompatActivity() {
         }
 
         mBinding.registerBtn.setOnClickListener {
-            val intent = Intent(this, HomePage::class.java)
+            val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
 
