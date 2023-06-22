@@ -263,6 +263,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocus
                     // Redirect to Sign Up screen
                     startActivity(Intent(this, SignInActivity::class.java))
                     Toast.makeText(this, "Account successfully created!", Toast.LENGTH_SHORT).show()
+                    FirebaseAuth.getInstance().signOut()
                 } else {
                     Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
                 }

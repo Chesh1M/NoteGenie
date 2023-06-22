@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.example.notegenie.databinding.ActivityRegisterBinding
 import com.example.notegenie.databinding.ActivitySummaryPageBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -35,11 +39,18 @@ class SummaryPage : AppCompatActivity() {
     // Database reference initialization
     private lateinit var database: DatabaseReference
 
+    // Firebase
+    private lateinit var firebaseAuth: FirebaseAuth
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySummaryPageBinding.inflate(this.layoutInflater)
         setContentView(binding.root)
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        // Status bar color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
 
 
         // Initializing the pop-up menu
@@ -54,6 +65,7 @@ class SummaryPage : AppCompatActivity() {
         navPopupMenu.menu.add(Menu.NONE, 0, 0, "Home")
         navPopupMenu.menu.add(Menu.NONE, 1, 1, "Summaries")
         navPopupMenu.menu.add(Menu.NONE, 2, 2, "Flashcards")
+        navPopupMenu.menu.add(Menu.NONE, 3, 3, "Logout")
 
         // Handling item clicks
         navPopupMenu.setOnMenuItemClickListener { menuItem->
@@ -78,6 +90,12 @@ class SummaryPage : AppCompatActivity() {
                 // Initializing an intent to switch activity
                 val switchActivity = Intent(this, FlashcardsPage::class.java)
                 startActivity(switchActivity)
+            } else if(menuID==3){
+                // Initializing an intent to switch activity
+                val switchActivity = Intent(this, StartActivity::class.java)
+                startActivity(switchActivity)
+                FirebaseAuth.getInstance().signOut()
+                Toast.makeText(this, "Sign out success!", Toast.LENGTH_SHORT).show()
             }
 
             false

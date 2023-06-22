@@ -7,30 +7,32 @@
     android:layout_gravity="bottom|center"
     android:background="#414C6B"
     android:backgroundTint="#414C6B"
-    tools:context=".SummariesPage">
+    tools:context=".SummaryPage">
+
 
     <TextView
         android:id="@+id/appTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="-30dp"
-        android:width="209dp"
+        android:width="270dp"
         android:height="57dp"
         android:fontFamily="@font/manrope_extrabold"
-        android:text="Notegenie"
+        android:text="@string/app_name"
         android:textColor="#FFFFFF"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/summariesTextView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.068"
+        app:layout_constraintHorizontal_bias="0.16"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.037" />
 
     <TextView
         android:id="@+id/summariesTextView"
         android:layout_width="209dp"
         android:layout_height="57dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="7dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="103dp"
         android:layout_marginBottom="16dp"
@@ -38,14 +40,15 @@
         android:gravity="left"
         android:text="Summaries"
         android:textColor="#FFFFFF"
-        android:textSize="30sp"
+        android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/searchBarCard"
-        app:layout_constraintEnd_toStartOf="@+id/navigatePagesMenu"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.272"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appTitle" />
 
     <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_marginTop="30dp"
@@ -59,6 +62,7 @@
             android:id="@+id/listOfSummariesView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentBottom="false"
             android:backgroundTint="#414C6B"
             android:divider="@null"
             android:dividerHeight="0dp"
@@ -120,15 +124,20 @@
     </androidx.cardview.widget.CardView>
 
 
-
+    <!-- HAMBURGER MENU -->
     <ImageView
         android:id="@+id/navigatePagesMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="85dp"
-        android:layout_marginEnd="59dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.914"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.059"
         app:srcCompat="@drawable/baseline_menu" />
+    <!-- // HAMBURGER MENU -->
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

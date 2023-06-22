@@ -31,7 +31,7 @@ class StartActivity : AppCompatActivity() {
         super.onStart()
 
         if (firebaseAuth.currentUser != null) {
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, HomePage::class.java)
             startActivity(intent)
         }
     }
