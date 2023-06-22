@@ -35,7 +35,7 @@ class FlashcardsPage : AppCompatActivity() {
         navPopupMenu.menu.add(Menu.NONE, 0, 0, "Home")
         navPopupMenu.menu.add(Menu.NONE, 1, 1, "Summaries")
         navPopupMenu.menu.add(Menu.NONE, 2, 2, "Flashcards")
-        navPopupMenu.menu.add(Menu.NONE, 3, 3, "Logout")
+        navPopupMenu.menu.add(Menu.NONE, 3, 3, "Settings")
 
         // Handling item clicks
         navPopupMenu.setOnMenuItemClickListener { menuItem->
@@ -64,8 +64,6 @@ class FlashcardsPage : AppCompatActivity() {
                 // Initializing an intent to switch activity
                 val switchActivity = Intent(this, StartActivity::class.java)
                 startActivity(switchActivity)
-                FirebaseAuth.getInstance().signOut()
-                Toast.makeText(this, "Sign out success!", Toast.LENGTH_SHORT).show()
             }
 
             false
