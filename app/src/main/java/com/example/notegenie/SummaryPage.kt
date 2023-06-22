@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.notegenie.databinding.ActivityRegisterBinding
 import com.example.notegenie.databinding.ActivitySummaryPageBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -48,12 +49,10 @@ class SummaryPage : AppCompatActivity() {
         setContentView(binding.root)
         firebaseAuth = FirebaseAuth.getInstance()
 
-        binding.logoutBtn.setOnClickListener {
-            val intent = Intent(this, StartActivity::class.java)
-            startActivity(intent)
-            FirebaseAuth.getInstance().signOut()
-            Toast.makeText(this, "Sign out success!", Toast.LENGTH_SHORT).show()
-        }
+        // Status bar color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
+
+
         // Initializing the pop-up menu
 
         // Firstly initializing the widget
@@ -66,6 +65,7 @@ class SummaryPage : AppCompatActivity() {
         navPopupMenu.menu.add(Menu.NONE, 0, 0, "Home")
         navPopupMenu.menu.add(Menu.NONE, 1, 1, "Summaries")
         navPopupMenu.menu.add(Menu.NONE, 2, 2, "Flashcards")
+        navPopupMenu.menu.add(Menu.NONE, 3, 3, "Logout")
 
         // Handling item clicks
         navPopupMenu.setOnMenuItemClickListener { menuItem->
@@ -90,6 +90,12 @@ class SummaryPage : AppCompatActivity() {
                 // Initializing an intent to switch activity
                 val switchActivity = Intent(this, FlashcardsPage::class.java)
                 startActivity(switchActivity)
+            } else if(menuID==3){
+                // Initializing an intent to switch activity
+                val switchActivity = Intent(this, StartActivity::class.java)
+                startActivity(switchActivity)
+                FirebaseAuth.getInstance().signOut()
+                Toast.makeText(this, "Sign out success!", Toast.LENGTH_SHORT).show()
             }
 
             false
