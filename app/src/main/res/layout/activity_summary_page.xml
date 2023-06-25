@@ -20,14 +20,14 @@
         android:text="Notegenie"
         android:textColor="#FFFFFF"
         android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@+id/summariesTextView"
+        app:layout_constraintBottom_toTopOf="@+id/flashCardsTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.068"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/summariesTextView"
+        android:id="@+id/flashCardsTextView"
         android:layout_width="209dp"
         android:layout_height="57dp"
         android:layout_marginStart="16dp"
@@ -81,7 +81,7 @@
         app:layout_constraintBottom_toTopOf="@+id/_dynamic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/summariesTextView">
+        app:layout_constraintTop_toBottomOf="@+id/flashCardsTextView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

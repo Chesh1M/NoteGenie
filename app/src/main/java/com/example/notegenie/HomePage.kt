@@ -48,7 +48,7 @@ class HomePage : AppCompatActivity() {
 
             } else if(menuID==2){
                 // Initializing an intent to switch activity
-                val switchActivity = Intent(this, FlashcardsPage::class.java)
+                val switchActivity = Intent(this, MegaMindMap::class.java)
                 startActivity(switchActivity)
             }
 
