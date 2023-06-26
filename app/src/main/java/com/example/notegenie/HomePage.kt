@@ -1,13 +1,14 @@
 package com.example.notegenie
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
-import android.os.FileUtils
 import android.view.Menu
 import android.view.View
 import android.widget.ImageView
 import android.widget.PopupMenu
+import androidx.appcompat.app.AppCompatActivity
+
 
 class HomePage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,6 +66,12 @@ class HomePage : AppCompatActivity() {
 
     // Function to add a file
     fun addFile(view: View){
+
+        val intent = Intent(Intent.ACTION_GET_CONTENT)
+        val uri = Uri.parse("") // a directory
+
+        intent.setDataAndType(uri, "*/*")
+        startActivity(Intent.createChooser(intent, "Open folder"))
 
 
     }
