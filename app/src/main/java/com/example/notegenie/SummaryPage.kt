@@ -159,6 +159,24 @@ class SummaryPage : AppCompatActivity() {
 
         }
 
+        // Open MegaMindMap on long press
+        binding.listOfSummariesView.setOnItemLongClickListener { parent, view, position, id ->
+
+            // Defining the variables to be pushed to the SummaryContentPage
+            val summaryTitle = listOfSummaryTitles[position]
+
+            // Initializing a new intent to go to the next activity
+            val megaMindMapIntent = Intent(this, MegaMindMap:: class.java)
+
+            // Pushing the data to the next activity
+            megaMindMapIntent.putExtra("Summary Title", summaryTitle)
+
+            // Switching to the next activity
+            startActivity(megaMindMapIntent)
+
+            return@setOnItemLongClickListener false // Must add this
+        }
+
 
     }
 

@@ -8,10 +8,24 @@
     android:background="#414C6B"
     tools:context=".MegaMindMap">
 
+    <ImageView
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="371dp"
+        android:onClick="goBack"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flashCardsTextView"
+        app:srcCompat="@drawable/baseline_arrow_back" />
+
     <TextView
         android:id="@+id/flashCardsTextView"
-        android:layout_width="209dp"
-        android:layout_height="57dp"
+        android:layout_width="392dp"
+        android:layout_height="86dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="103dp"
@@ -27,20 +41,67 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appTitle" />
 
-
-    <me.jagar.mindmappingandroidlibrary.Views.MindMappingView
-        android:id="@+id/mind_mapping_view"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="600dp"
-        android:layout_marginTop="74dp"
-        android:background="#F5F4EC"
+        android:layout_height="750dp"
+        android:layout_marginTop="10dp"
+        android:translationY="100dp"
+        app:cardBackgroundColor="#F5F4EC"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/flashCardsTextView"
-        app:layout_constraintVertical_bias="1.0" />
-    <!---You need to add background to display connections-->
+        app:layout_constraintTop_toBottomOf="@+id/flashCardsTextView">
+
+        <me.jagar.mindmappingandroidlibrary.Zoom.ZoomLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="74dp"
+            android:gravity="center"
+            android:scrollbars="vertical|horizontal"
+            android:translationY="-100dp"
+            app:alignment="center"
+            app:animationDuration="280"
+            app:flingEnabled="false"
+            app:hasClickableChildren="true"
+            app:horizontalPanEnabled="true"
+            app:maxZoom="2.5"
+            app:maxZoomType="zoom"
+            app:minZoom="0.7"
+            app:minZoomType="zoom"
+            app:oneFingerScrollEnabled="false"
+            app:overPinchable="true"
+            app:overScrollHorizontal="true"
+            app:overScrollVertical="true"
+            app:scrollEnabled="true"
+            app:threeFingersScrollEnabled="true"
+            app:transformation="centerInside"
+            app:transformationGravity="auto"
+            app:twoFingersScrollEnabled="true"
+            app:verticalPanEnabled="true"
+            app:zoomEnabled="true"
+            tools:context=".MainActivity">
+
+
+            <me.jagar.mindmappingandroidlibrary.Views.MindMappingView
+                android:id="@+id/mind_mapping_view"
+                android:layout_width="500dp"
+                android:layout_height="800dp"
+                android:layout_marginTop="74dp"
+                android:background="#F5F4EC"
+                android:translationY="-80dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/flashCardsTextView"
+                app:layout_constraintVertical_bias="1.0" />
+            <!---You need to add background to display connections-->
+
+        </me.jagar.mindmappingandroidlibrary.Zoom.ZoomLayout>
+    </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
