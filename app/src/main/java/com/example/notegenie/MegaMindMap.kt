@@ -20,6 +20,7 @@ import me.jagar.mindmappingandroidlibrary.Listeners.OnItemClicked
 import me.jagar.mindmappingandroidlibrary.Views.Item
 import me.jagar.mindmappingandroidlibrary.Views.ItemLocation
 import me.jagar.mindmappingandroidlibrary.Views.MindMappingView
+import kotlin.reflect.typeOf
 
 
 class MegaMindMap : AppCompatActivity() {
@@ -168,25 +169,36 @@ class MegaMindMap : AppCompatActivity() {
         // Initializing the values to be returned
         val tagsToBeReturned = mutableMapOf<String, List<String>>()
 
+        // Getting the Values of the map
+        val mapOfTagsValues = mapOfTags.values.toList()
 
+        // Converting these values into a string
+        var mapOfTagsValuesString = mapOfTagsValues.joinToString()
+
+        // Removing the first square bracket from the list
+        mapOfTagsValuesString = mapOfTagsValuesString.substring(1)
+
+        // Removing the last element of the string
+        mapOfTagsValuesString = mapOfTagsValuesString.substring(0, mapOfTagsValuesString.length - 1)
+
+        //Converting that string into a list
+        var mapOfTagsValuesStringList = mapOfTagsValuesString.split("], [")
+
+        // Introducing a loop counter
+        var counterI = 0
 
         // Looping through the key Tags
         mapOfTags.keys.forEach { key ->
 
-            // Getting the values associated with the nodes
-            var nodeTagsValues = mapOfTags.values.toList()
+            if (key != rootTagName){ // If the key is not the root tag
 
-            // Initializing a value for iteration
-            var i = 0
+                // Getting the list from the index
+                val listFromMapOfTagsValuesStringList = mapOfTagsValuesStringList.elementAt(counterI)
+                    .split(", ") // Splitting the string within the list
 
-            // If the key is equal to the root tag name
-            if (key != rootTagName){ // If the key is not the root
-
-                nodeTagsValues = nodeTagsValues.slice(i..i+1)
-
-                Log.i("List value", nodeTagsValues.toString())
-
-                val commonTagValues = rootTagValues.intersect(nodeTagsValues).toList()// Getting the common elements within the array
+                // Finding the common value between both the lists
+                val commonTagValues = rootTagValues.intersect(listFromMapOfTagsValuesStringList)
+                    .toTypedArray()
 
                 if (commonTagValues.isNotEmpty()){ // If there are common tags:
 
@@ -195,13 +207,60 @@ class MegaMindMap : AppCompatActivity() {
 
                 }
 
-                // Updating the counter
-                i += 1
 
             }
-        }
 
+            // Updating the counter
+            counterI += 1
+
+        }
         return tagsToBeReturned
+
+
+
+
+//        // Looping through the values
+//        mapOfTagsValues.forEach { it ->
+//
+////            Log.i("This it the value lol", value.toString())
+//
+//        }
+
+
+
+//        // Looping through the key Tags
+//        mapOfTags.keys.forEach { key ->
+//
+//            // Getting the values associated with the nodes
+//            var nodeTagsValues = mapOfTags.values
+//
+//            // Initializing a value for iteration
+//            var i = 0
+//
+//            // If the key is equal to the root tag name
+//            if (key != rootTagName){ // If the key is not the root
+//
+//                nodeTagsValues.forEach { it ->
+//                    break
+//                }
+//
+//                Log.i("List value", nodeTagsValues.toString())
+//
+//                val commonTagValues = rootTagValues.intersect(nodeTagsValues).toList()// Getting the common elements within the array
+//
+//                if (commonTagValues.isNotEmpty()){ // If there are common tags:
+//
+//                    // Add the element to tagsToBeReturned
+//                    tagsToBeReturned.put(key, commonTagValues as List<String>)
+//
+//                }
+//
+//                // Updating the counter
+//                i += 1
+//
+//            }
+//        }
+
 
     }
 }
