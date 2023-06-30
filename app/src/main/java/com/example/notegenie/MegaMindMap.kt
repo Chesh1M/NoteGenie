@@ -95,7 +95,7 @@ class MegaMindMap : AppCompatActivity() {
                     Log.i("Common Tags", mapOfCommonTags.values.toString())
 
                     // Generating the map
-                    generateMindMap(MegaMindMap, rootNode, mapOfCommonTags)
+                    generateMindMap(MegaMindMap, rootNode, mapOfCommonTags, retrievedMap)
 
 
 
@@ -136,28 +136,6 @@ class MegaMindMap : AppCompatActivity() {
         }
 
 
-
-        // Initializing the list of tags
-        val tagsOfCalculus = listOf("Mathematics", "Sequences", "Operations") // Tags for Calculus page
-        val tagsOfAlgebra = listOf("Mathematics", "Operations", "Equations") // Tags for the Algebra page
-        val tagsOfMechanics = listOf("Mathematics", "Physics", "Force", "Objects", "Sequences") // Tags for the mechanics page
-        val tagsOfOptics = listOf("Physics", "Light", "Equations") // Tags for the Optics page
-
-        // Initializing the root item (NOTE: PLEASE DO INITIALIZE A ROOT FOR EVERY KEY)
-        val calculusRoot = Item(this, "Calculus", "", true)
-
-        // Connecting the view to a root
-        MegaMindMap.addCentralItem(calculusRoot, false)
-
-//        // Adding child to root
-//        val algebraRoot = childToRoot(MegaMindMap, "Algebra", calculusRoot, tagsOfCalculus.intersect(tagsOfAlgebra).toTypedArray())
-//        val mechRoot = childToRoot(MegaMindMap, "Mechanics", calculusRoot, tagsOfCalculus.intersect(tagsOfMechanics).toTypedArray())
-//
-//        // Adding child to child
-//        childToRoot(MegaMindMap, "Complex Numbers", mechRoot, tagsOfCalculus.intersect(tagsOfAlgebra).toTypedArray())
-//        childToRoot(MegaMindMap, "Optics", mechRoot, tagsOfMechanics.intersect(tagsOfOptics).toTypedArray())
-//        childToRoot(MegaMindMap, "Optics", algebraRoot, tagsOfAlgebra.intersect(tagsOfOptics).toTypedArray())
-//        childToRoot(MegaMindMap, "Optics", calculusRoot, tagsOfCalculus.intersect(tagsOfOptics).toTypedArray())
 
         // Setting an onClickListener
         MegaMindMap.setOnItemClicked { item ->
@@ -247,21 +225,23 @@ class MegaMindMap : AppCompatActivity() {
 
     // Function to construct the MindMap from the tags and the main root
     fun generateMindMap(MegaMindMap: MindMappingView, rootNodeMain: Item,
-                        mapOfCommonTags: Map<String, String>){
+                        mapOfCommonTagsLocal: Map<String, String>,
+                        mapOfCommonTagsInternational: Map<String, String>) {
 
 
         // Looping through the keys
-        mapOfCommonTags.keys.forEach { key ->
+        mapOfCommonTagsLocal.keys.forEach { key ->
 
             // Deriving values of a particular key
-            val commonTagOfKey = mapOfCommonTags[key]
+            val commonTagOfKeys = mapOfCommonTagsLocal[key]
 
             // Converting from string to array
-            val commonTagOfKeyList = commonTagOfKey.toString().split(",").toTypedArray()
+            val commonTagOfKeyList = commonTagOfKeys.toString().split(",").toTypedArray()
 
 
 
-            childToRoot(MegaMindMap, key, rootNodeMain, commonTagOfKeyList)
+            val childRoot = childToRoot(MegaMindMap, key, rootNodeMain, commonTagOfKeyList)
+
 
 
         }
