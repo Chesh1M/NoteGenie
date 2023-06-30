@@ -50,8 +50,24 @@ class MegaMindMap : AppCompatActivity() {
             // Loading the data from the database
             retrievedMap = it.value as Map<String, String>
 
+            // Getting the values associated with the root
+            val rootNodeTags = retrievedMap.values.toList()
 
-            // Getting all the values within the map
+            // Setting it as strings
+            var rootNodeTagsString = rootNodeTags.joinToString()
+
+            // Removing the first square bracket from the list
+            rootNodeTagsString = rootNodeTagsString.substring(1)
+
+            // Removing the last square bracket
+            rootNodeTagsString = rootNodeTagsString.substring(0, rootNodeTagsString.length-1)
+
+            // Converting that string into a list
+            var rootNodeTagsStringList = rootNodeTagsString.split("], [")
+
+
+            // Initializing a loop counter
+            var counterJ = 0
 
 
             // Looping through the values to find the key
@@ -68,12 +84,18 @@ class MegaMindMap : AppCompatActivity() {
                     // Connecting the view to a root
                     MegaMindMap.addCentralItem(rootNode, false)
 
-                    // Getting the values associated with the root
-                    val rootNodeTags = retrievedMap.values.toList()
+                    val listFromRootNodeTagsStringList = rootNodeTagsStringList.elementAt(counterJ)
+                        .split(", ") // Splitting the string within the list
 
 
                     // Deriving the tag values that are common between the root and values
-                    val mapOfCommonTags = findCommonTags(key, rootNodeTags, retrievedMap)
+                    val mapOfCommonTags = findCommonTags(key, listFromRootNodeTagsStringList, retrievedMap)
+
+                    // Giving the common tags as output
+                    Log.i("Common Tags", mapOfCommonTags.values.toString())
+
+                    // Generating the map
+                    generateMindMap(MegaMindMap, rootNode, mapOfCommonTags)
 
 
 
@@ -82,8 +104,13 @@ class MegaMindMap : AppCompatActivity() {
                     Log.e("Data not found", "The page is not found in the database")
                 }
 
+                // Updating the counter
+                counterJ += 1
+
+
 
             }
+
 
         }
 
@@ -122,15 +149,15 @@ class MegaMindMap : AppCompatActivity() {
         // Connecting the view to a root
         MegaMindMap.addCentralItem(calculusRoot, false)
 
-        // Adding child to root
-        val algebraRoot = childToRoot(MegaMindMap, "Algebra", calculusRoot, tagsOfCalculus.intersect(tagsOfAlgebra).toTypedArray())
-        val mechRoot = childToRoot(MegaMindMap, "Mechanics", calculusRoot, tagsOfCalculus.intersect(tagsOfMechanics).toTypedArray())
-
-        // Adding child to child
-        childToRoot(MegaMindMap, "Complex Numbers", mechRoot, tagsOfCalculus.intersect(tagsOfAlgebra).toTypedArray())
-        childToRoot(MegaMindMap, "Optics", mechRoot, tagsOfMechanics.intersect(tagsOfOptics).toTypedArray())
-        childToRoot(MegaMindMap, "Optics", algebraRoot, tagsOfAlgebra.intersect(tagsOfOptics).toTypedArray())
-        childToRoot(MegaMindMap, "Optics", calculusRoot, tagsOfCalculus.intersect(tagsOfOptics).toTypedArray())
+//        // Adding child to root
+//        val algebraRoot = childToRoot(MegaMindMap, "Algebra", calculusRoot, tagsOfCalculus.intersect(tagsOfAlgebra).toTypedArray())
+//        val mechRoot = childToRoot(MegaMindMap, "Mechanics", calculusRoot, tagsOfCalculus.intersect(tagsOfMechanics).toTypedArray())
+//
+//        // Adding child to child
+//        childToRoot(MegaMindMap, "Complex Numbers", mechRoot, tagsOfCalculus.intersect(tagsOfAlgebra).toTypedArray())
+//        childToRoot(MegaMindMap, "Optics", mechRoot, tagsOfMechanics.intersect(tagsOfOptics).toTypedArray())
+//        childToRoot(MegaMindMap, "Optics", algebraRoot, tagsOfAlgebra.intersect(tagsOfOptics).toTypedArray())
+//        childToRoot(MegaMindMap, "Optics", calculusRoot, tagsOfCalculus.intersect(tagsOfOptics).toTypedArray())
 
         // Setting an onClickListener
         MegaMindMap.setOnItemClicked { item ->
@@ -162,12 +189,10 @@ class MegaMindMap : AppCompatActivity() {
 
     // Function to find the common tags
     fun findCommonTags(rootTagName: String, rootTagValues: List<String>,
-                       mapOfTags: Map<String, String>): MutableMap<String, List<String>> {
-
-        Log.i("Common", mapOfTags.toString())
+                       mapOfTags: Map<String, String>): MutableMap<String, String> {
 
         // Initializing the values to be returned
-        val tagsToBeReturned = mutableMapOf<String, List<String>>()
+        val tagsToBeReturned = mutableMapOf<String, String>()
 
         // Getting the Values of the map
         val mapOfTagsValues = mapOfTags.values.toList()
@@ -182,7 +207,7 @@ class MegaMindMap : AppCompatActivity() {
         mapOfTagsValuesString = mapOfTagsValuesString.substring(0, mapOfTagsValuesString.length - 1)
 
         //Converting that string into a list
-        var mapOfTagsValuesStringList = mapOfTagsValuesString.split("], [")
+        val mapOfTagsValuesStringList = mapOfTagsValuesString.split("], [")
 
         // Introducing a loop counter
         var counterI = 0
@@ -197,13 +222,13 @@ class MegaMindMap : AppCompatActivity() {
                     .split(", ") // Splitting the string within the list
 
                 // Finding the common value between both the lists
-                val commonTagValues = rootTagValues.intersect(listFromMapOfTagsValuesStringList)
+                val commonTagValues = rootTagValues.intersect(listFromMapOfTagsValuesStringList.toSet())
                     .toTypedArray()
 
                 if (commonTagValues.isNotEmpty()){ // If there are common tags:
 
                     // Add the element to tagsToBeReturned
-                    tagsToBeReturned.put(key, commonTagValues as List<String>)
+                    tagsToBeReturned.put(key, commonTagValues.joinToString(", "))
 
                 }
 
@@ -218,49 +243,27 @@ class MegaMindMap : AppCompatActivity() {
 
 
 
+    }
 
-//        // Looping through the values
-//        mapOfTagsValues.forEach { it ->
-//
-////            Log.i("This it the value lol", value.toString())
-//
-//        }
+    // Function to construct the MindMap from the tags and the main root
+    fun generateMindMap(MegaMindMap: MindMappingView, rootNodeMain: Item,
+                        mapOfCommonTags: Map<String, String>){
 
 
+        // Looping through the keys
+        mapOfCommonTags.keys.forEach { key ->
 
-//        // Looping through the key Tags
-//        mapOfTags.keys.forEach { key ->
-//
-//            // Getting the values associated with the nodes
-//            var nodeTagsValues = mapOfTags.values
-//
-//            // Initializing a value for iteration
-//            var i = 0
-//
-//            // If the key is equal to the root tag name
-//            if (key != rootTagName){ // If the key is not the root
-//
-//                nodeTagsValues.forEach { it ->
-//                    break
-//                }
-//
-//                Log.i("List value", nodeTagsValues.toString())
-//
-//                val commonTagValues = rootTagValues.intersect(nodeTagsValues).toList()// Getting the common elements within the array
-//
-//                if (commonTagValues.isNotEmpty()){ // If there are common tags:
-//
-//                    // Add the element to tagsToBeReturned
-//                    tagsToBeReturned.put(key, commonTagValues as List<String>)
-//
-//                }
-//
-//                // Updating the counter
-//                i += 1
-//
-//            }
-//        }
+            // Deriving values of a particular key
+            val commonTagOfKey = mapOfCommonTags[key]
+
+            // Converting from string to array
+            val commonTagOfKeyList = commonTagOfKey.toString().split(",").toTypedArray()
 
 
+
+            childToRoot(MegaMindMap, key, rootNodeMain, commonTagOfKeyList)
+
+
+        }
     }
 }
