@@ -95,7 +95,8 @@ class MegaMindMap : AppCompatActivity() {
                     Log.i("Common Tags", mapOfCommonTags.values.toString())
 
                     // Generating the map
-                    generateMindMap(MegaMindMap, rootNode, mapOfCommonTags, retrievedMap)
+                    generateMindMap(MegaMindMap, topicOfMindMap, rootNode, mapOfCommonTags,
+                        retrievedMap.toMutableMap())
 
 
 
@@ -224,9 +225,15 @@ class MegaMindMap : AppCompatActivity() {
     }
 
     // Function to construct the MindMap from the tags and the main root
-    fun generateMindMap(MegaMindMap: MindMappingView, rootNodeMain: Item,
+    fun generateMindMap(MegaMindMap: MindMappingView, rootNodeName: String, rootNodeMain: Item,
                         mapOfCommonTagsLocal: Map<String, String>,
-                        mapOfCommonTagsInternational: Map<String, String>) {
+                        mapOfCommonTagsInternational: MutableMap<String, String>) {
+
+        // Declaring a visited list
+        val visitedList = mapOfCommonTagsLocal.keys.toMutableList()
+
+        // Removing the root node from visited
+        visitedList.remove(rootNodeName)
 
 
         // Looping through the keys
@@ -241,6 +248,27 @@ class MegaMindMap : AppCompatActivity() {
 
 
             val childRoot = childToRoot(MegaMindMap, key, rootNodeMain, commonTagOfKeyList)
+
+            // If the visited list is not empty, recurse
+            if (visitedList.isNotEmpty()){
+
+                // Removing the previous root element from the map
+                mapOfCommonTagsInternational.remove(rootNodeName)
+
+                // Finding the common tag values
+                val listOfCommonTags = findCommonTags(key, mapOfCommonTagsInternational[key]
+                    .toString().replace("[", "").replace("]","")
+                    .split(", "), mapOfCommonTagsInternational)
+
+                generateMindMap(MegaMindMap, key, childRoot, listOfCommonTags, mapOfCommonTagsInternational)
+
+            }else{
+
+                Log.i("List Depleted", "The visited list has been depleted")
+
+            }
+
+
 
 
 

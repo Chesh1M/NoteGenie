@@ -180,12 +180,17 @@ class SummaryPage : AppCompatActivity() {
 
     }
 
-    // Function that is activated to generate a new summary
+    // Function that is activated to generate a new summary & tags
     fun generateNewSummary(view: View, summaryTopic: String, lastEdited: String,
-                           summaryContent: String){
+                           summaryContent: String, listOfTags: List<String>){
 
         // Write a message to the database
-        FirebaseDatabase.getInstance().getReference().child("Summaries").child(summaryTopic).child(lastEdited).setValue(summaryContent);
+        FirebaseDatabase.getInstance().getReference().child("Summaries")
+            .child(summaryTopic).child(lastEdited).setValue(summaryContent);
+
+        // Generate tags
+        FirebaseDatabase.getInstance().getReference().child("Tags")
+            .child(summaryTopic).setValue(listOfTags);
 
 
     }
