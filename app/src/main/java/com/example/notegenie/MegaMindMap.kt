@@ -245,33 +245,31 @@ class MegaMindMap : AppCompatActivity() {
             // Converting from string to array
             val commonTagOfKeyList = commonTagOfKeys.toString().split(",").toTypedArray()
 
-
-
             val childRoot = childToRoot(MegaMindMap, key, rootNodeMain, commonTagOfKeyList)
 
-            // If the visited list is not empty, recurse
-            if (visitedList.isNotEmpty()){
 
-                // Removing the previous root element from the map
-                mapOfCommonTagsInternational.remove(rootNodeName)
-
-                // Finding the common tag values
-                val listOfCommonTags = findCommonTags(key, mapOfCommonTagsInternational[key]
-                    .toString().replace("[", "").replace("]","")
-                    .split(", "), mapOfCommonTagsInternational)
-
-                generateMindMap(MegaMindMap, key, childRoot, listOfCommonTags, mapOfCommonTagsInternational)
-
-            }else{
-
-                Log.i("List Depleted", "The visited list has been depleted")
-
-            }
-
-
-
+//            // If the visited list is not empty, recurse
+//            if (visitedList.isNotEmpty()){
+//
+//                // Removing the previous root element from the map
+//                mapOfCommonTagsInternational.remove(rootNodeName)
+//
+//                // Finding the common tag values
+//                val listOfCommonTags = findCommonTags(key, mapOfCommonTagsInternational[key]
+//                    .toString().replace("[", "").replace("]","")
+//                    .split(", "), mapOfCommonTagsInternational)
+//
+//                val x = generateMindMap(MegaMindMap, key, childRoot, listOfCommonTags, mapOfCommonTagsInternational)
+//
+//            }else{
+//
+//                Log.i("List Depleted", "The visited list has been depleted")
+//
+//            }
 
 
         }
+
+
     }
 }
