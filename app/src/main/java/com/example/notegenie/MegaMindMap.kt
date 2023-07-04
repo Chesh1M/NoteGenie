@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -17,6 +18,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import me.jagar.mindmappingandroidlibrary.Listeners.OnItemClicked
+import me.jagar.mindmappingandroidlibrary.Views.ConnectionTextMessage
 import me.jagar.mindmappingandroidlibrary.Views.Item
 import me.jagar.mindmappingandroidlibrary.Views.ItemLocation
 import me.jagar.mindmappingandroidlibrary.Views.MindMappingView
@@ -80,6 +82,7 @@ class MegaMindMap : AppCompatActivity() {
 
                     // Initializing the root item (NOTE: PLEASE DO INITIALIZE A ROOT FOR EVERY KEY)
                     val rootNode = Item(this, key, "", true)
+
 
                     // Connecting the view to a root
                     MegaMindMap.addCentralItem(rootNode, false)
@@ -147,6 +150,44 @@ class MegaMindMap : AppCompatActivity() {
             }, 100)
             item.animate().scaleX(0.9090909F)
             item.animate().scaleY(0.9090909F)
+
+            FirebaseDatabase.getInstance().getReference("Summaries").get()
+                .addOnSuccessListener{it ->
+
+                    val summaryDataSnapshot = it.value as Map<*, *>
+
+                    // Getting the name of tag
+                    val nameOfTag = item.title.text
+
+                    // Toast to notify the user that the item has been selected
+                    Toast.makeText(this, "Going to "+nameOfTag, Toast.LENGTH_SHORT).show()
+
+                    // Removing the necessary characters
+
+                    // Getting the value
+                    var summaryContentOfItem = summaryDataSnapshot[nameOfTag].toString()
+
+                    // Removing the date
+                    summaryContentOfItem = summaryContentOfItem.drop(12)
+
+                    // Defining the variables to be pushed to the SummaryContentPage
+                    val summaryTitle = nameOfTag
+                    val summaryLastEditDate ="Dummy Variable"
+                    val summaryContent = summaryContentOfItem
+
+                    // Initializing a new intent to go to the next activity
+                    val displaySummaryContent = Intent(this, DisplaySummaryContent:: class.java)
+
+                    // Pushing the data to the next activity
+                    displaySummaryContent.putExtra("Summary Title", summaryTitle)
+                    displaySummaryContent.putExtra("Edit Date", summaryLastEditDate)
+                    displaySummaryContent.putExtra("Summary Content", summaryContent)
+
+                    // Switching to the next activity
+                    startActivity(displaySummaryContent)
+
+
+                }
 
         }
 
@@ -248,23 +289,41 @@ class MegaMindMap : AppCompatActivity() {
             val childRoot = childToRoot(MegaMindMap, key, rootNodeMain, commonTagOfKeyList)
 
 
+
 //            // If the visited list is not empty, recurse
-//            if (visitedList.isNotEmpty()){
+//            if (visitedList.isNotEmpty()) {
 //
 //                // Removing the previous root element from the map
 //                mapOfCommonTagsInternational.remove(rootNodeName)
 //
-//                // Finding the common tag values
-//                val listOfCommonTags = findCommonTags(key, mapOfCommonTagsInternational[key]
-//                    .toString().replace("[", "").replace("]","")
-//                    .split(", "), mapOfCommonTagsInternational)
+//                // Getting the number of children
+//                val numOfChildren = visitedList.size
+//                Toast.makeText(this, numOfChildren.toString(), Toast.LENGTH_LONG).show()
+//                Toast.makeText(
+//                    this,
+//                    rootNodeMain.indexOfChild(childRoot).toString(),
+//                    Toast.LENGTH_LONG
+//                ).show()
 //
-//                val x = generateMindMap(MegaMindMap, key, childRoot, listOfCommonTags, mapOfCommonTagsInternational)
+//                for (i in 1..numOfChildren) {
 //
-//            }else{
+//                    // Finding the common tag values
+//                    val listOfCommonTags = findCommonTags(
+//                        key, mapOfCommonTagsInternational[key]
+//                            .toString().replace("[", "").replace("]", "")
+//                            .split(", "), mapOfCommonTagsInternational
+//                    )
 //
-//                Log.i("List Depleted", "The visited list has been depleted")
 //
+//                    val x = generateMindMap(
+//                        MegaMindMap,
+//                        key,
+//                        childRoot,
+//                        listOfCommonTags,
+//                        mapOfCommonTagsInternational
+//                    )
+//
+//                }
 //            }
 
 

@@ -15,7 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:background="#EAE8E0"
         app:cardBackgroundColor="#EAE8E0"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="10dp"
         app:layout_constraintBottom_toTopOf="@+id/space"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
