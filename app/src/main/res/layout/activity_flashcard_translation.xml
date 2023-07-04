@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FlashcardTranslation">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#414C6B"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="50sp"
+                android:paddingTop="30dp"
+                android:text="Calculus"
+                android:textColor="#FFFFFF"
+                android:textSize="30sp"
+                android:textStyle="bold">
+
+            </TextView>
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:paddingTop="30dp"
+                android:src="@drawable/left_arrow_icon"
+                android:layout_centerVertical="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="30sp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="Partial Derivatives"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
+                android:textStyle="bold">
+            </TextView>
+
+
+            <Spinner
+                android:id="@+id/lang_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:entries="@array/Languages"
+                android:background="@drawable/lang_option_btn"
+                android:paddingLeft="5sp">
+
+            </Spinner>
+        </RelativeLayout>
+
+
+
+
+        <LinearLayout
+            android:background="@drawable/round_back_design"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="What is the partial derivative of         x^2 + 3x + 7y with respect to x?"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:padding="10dp"
+                android:textSize="35sp">
+            </TextView>
+
+            <ImageView
+                android:layout_width="500dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/equation_pic">
+            </ImageView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/wrong_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginLeft="25sp"
+                    android:drawableRight="@drawable/cross"
+                    android:paddingRight="38dp"
+                    android:layout_marginTop="100dp"
+                    android:background="@drawable/wrong_btn">
+
+                </androidx.appcompat.widget.AppCompatButton>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/correct_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginStart="270dp"
+                    android:layout_marginRight="25sp"
+                    android:paddingRight="38dp"
+                    android:layout_marginTop="100dp"
+                    android:drawableRight="@drawable/tick"
+                    android:background="@drawable/correct_btn">
+
+                </androidx.appcompat.widget.AppCompatButton>
+            </RelativeLayout>
+
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

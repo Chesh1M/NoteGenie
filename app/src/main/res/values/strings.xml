@@ -11,4 +11,11 @@
     <string name="loginWithGoogle">LOGIN WITH GOOGLE</string>
     <string name="newUserInfo">If you are a new user, click</string>
     <string name="existingAccountInfo">Already have an account?</string>
+
+    <string-array name="Languages">
+        <item>English</item>
+        <item>Chinese</item>
+        <item>Malay</item>
+        <item>Tamil</item>
+    </string-array>
 </resources>
