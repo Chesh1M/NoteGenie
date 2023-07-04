@@ -8,6 +8,14 @@
     tools:context=".HomePage">
 
     <!-- APP NAME TITLE -->
+    <!-- APP NAME TITLE -->
+
+    <!-- PAGE TITLE -->
+
+    <!-- PAGE TITLE -->
+
+    <!-- HAMBURGER MENU -->
+
     <TextView
         android:id="@+id/appTitle"
         android:layout_width="wrap_content"
@@ -21,20 +29,17 @@
         android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.136"
+        app:layout_constraintHorizontal_bias="0.093"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.037" />
-    <!-- APP NAME TITLE -->
-
-    <!-- PAGE TITLE -->
+        app:layout_constraintVertical_bias="0.01" />
 
     <TextView
         android:id="@+id/homeTextView"
         android:layout_width="209dp"
         android:layout_height="57dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="64dp"
         android:layout_marginEnd="103dp"
         android:fontFamily="@font/manrope_extrabold"
         android:gravity="left"
@@ -42,13 +47,10 @@
         android:textColor="#FFFFFF"
         android:textSize="30sp"
         app:layout_constraintEnd_toStartOf="@+id/navigatePagesMenu"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.132" />
-    <!-- PAGE TITLE -->
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- HAMBURGER MENU -->
     <ImageView
         android:id="@+id/navigatePagesMenu"
         android:layout_width="wrap_content"
