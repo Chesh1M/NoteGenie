@@ -16,6 +16,12 @@
             android:name=".LanguagesSetPage"
             android:exported="false" />
         <activity
+            android:name=".MegaMindMap"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true" />
+        <activity
             android:name=".SettingsPage"
             android:exported="false" />
         <activity

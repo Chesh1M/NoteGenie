@@ -28,19 +28,21 @@
     <!-- APP NAME TITLE -->
 
     <!-- PAGE TITLE -->
+
     <TextView
         android:id="@+id/homeTextView"
         android:layout_width="209dp"
         android:layout_height="57dp"
-        android:layout_marginEnd="-30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="103dp"
         android:fontFamily="@font/manrope_extrabold"
         android:gravity="left"
         android:text="Home Page"
         android:textColor="#FFFFFF"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.11"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toStartOf="@+id/navigatePagesMenu"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.132" />
@@ -51,22 +53,21 @@
         android:id="@+id/navigatePagesMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="85dp"
+        android:layout_marginEnd="59dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.914"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.059"
         app:srcCompat="@drawable/baseline_menu" />
     <!-- // HAMBURGER MENU -->
 
-    <!-- ADD FILE BUTTON -->
     <Button
         android:id="@+id/addFileButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:backgroundTint="#FFE45C"
+        android:onClick="addFile"
         android:text="Add File"
         android:textColor="#000000"
         android:translationY="-10dp"
