@@ -37,11 +37,64 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/changeLanguageCardView"
+                android:layout_width="104dp"
+                android:layout_height="39dp"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="80dp"
+                android:layout_marginBottom="23dp"
+                android:backgroundTint="#124970"
+                android:translationX="50dp"
+                app:cardCornerRadius="20dp"
+                app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/textView"
+                app:layout_constraintTop_toBottomOf="@+id/summaryTextView">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/currentLanguageTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="29dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="En"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/changeLanguageImageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginBottom="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/currentLanguageTextView"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/baseline_arrow_right" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
             <TextView
+                android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="30sp"
@@ -50,23 +103,10 @@
                 android:text="Partial Derivatives"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
-                android:textStyle="bold">
-            </TextView>
+                android:textStyle="bold"></TextView>
 
 
-            <Spinner
-                android:id="@+id/lang_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="20dp"
-                android:entries="@array/Languages"
-                android:background="@drawable/lang_option_btn"
-                android:paddingLeft="5sp">
-
-            </Spinner>
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 
@@ -82,14 +122,14 @@
             android:padding="15dp">
 
             <TextView
+                android:id="@+id/flashCardText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:padding="10dp"
                 android:text="What is the partial derivative of         x^2 + 3x + 7y with respect to x?"
                 android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                android:padding="10dp"
-                android:textSize="35sp">
-            </TextView>
+                android:textSize="35sp"
+                android:textStyle="bold"></TextView>
 
             <ImageView
                 android:layout_width="500dp"

@@ -60,7 +60,7 @@ class HomePage : AppCompatActivity() {
 
             } else if(menuID==2){
                 // Initializing an intent to switch activity
-                val switchActivity = Intent(this, FlashcardsPage::class.java)
+                val switchActivity = Intent(this, FlashcardTranslation::class.java)
                 startActivity(switchActivity)
             } else if(menuID==3){
                 // Initializing an intent to switch activity
