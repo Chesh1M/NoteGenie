@@ -63,7 +63,7 @@ class DisplaySummaryContent : AppCompatActivity() {
         changeLanguagePopupMenu.menu.add(Menu.NONE, 0, 0, "English (En)")
         changeLanguagePopupMenu.menu.add(Menu.NONE, 1, 1, "Chinese (Ch)")
         changeLanguagePopupMenu.menu.add(Menu.NONE, 2, 2, "Tamil (Ta)")
-        changeLanguagePopupMenu.menu.add(Menu.NONE, 3, 3, "Spanish (Sp)")
+        changeLanguagePopupMenu.menu.add(Menu.NONE, 3, 3, "Malay (Ma)")
 
         // Handling item clicks
         changeLanguagePopupMenu.setOnMenuItemClickListener { menuItem->
@@ -171,25 +171,25 @@ class DisplaySummaryContent : AppCompatActivity() {
             } else if(menuID==3){
 
                 // Switching the Language
-                CURRENT_LANGUAGE = "Sp"
+                CURRENT_LANGUAGE = "Ma"
                 currentLanguageTextView.text = CURRENT_LANGUAGE
 
                 // Notifying the user of the change
-                Toast.makeText(this, "Language Changed to Spanish",
+                Toast.makeText(this, "Language Changed to Malay",
                     Toast.LENGTH_SHORT).show()
 
                 // Create an English-Spanish translator:
                 val options = TranslatorOptions.Builder()
                     .setSourceLanguage(TranslateLanguage.ENGLISH)
-                    .setTargetLanguage(TranslateLanguage.SPANISH)
+                    .setTargetLanguage(TranslateLanguage.MALAY)
                     .build()
-                val englishSpanishTranslator = Translation.getClient(options)
+                val englishMalayTranslator = Translation.getClient(options)
 
                 // Making sure that the model is available
                 val conditions = DownloadConditions.Builder()
                     .requireWifi()
                     .build()
-                englishSpanishTranslator.downloadModelIfNeeded(conditions)
+                englishMalayTranslator.downloadModelIfNeeded(conditions)
                     .addOnSuccessListener {
                         Log.i("Translation Load Status", "Sucessfully Translated")
                     }
@@ -201,7 +201,7 @@ class DisplaySummaryContent : AppCompatActivity() {
                     }
 
                 // Actually translating
-                englishSpanishTranslator.translate(binding.summaryContentsView.text.toString())
+                englishMalayTranslator.translate(binding.summaryContentsView.text.toString())
                     .addOnSuccessListener { translatedText ->
                         binding.summaryContentsView.text = translatedText.toString()
                         Log.i("Translation Status:", "Sucessfuly Translated")

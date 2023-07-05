@@ -151,43 +151,43 @@ class MegaMindMap : AppCompatActivity() {
             item.animate().scaleX(0.9090909F)
             item.animate().scaleY(0.9090909F)
 
-            FirebaseDatabase.getInstance().getReference("Summaries").get()
-                .addOnSuccessListener{it ->
-
-                    val summaryDataSnapshot = it.value as Map<*, *>
-
-                    // Getting the name of tag
-                    val nameOfTag = item.title.text
-
-                    // Toast to notify the user that the item has been selected
-                    Toast.makeText(this, "Going to "+nameOfTag, Toast.LENGTH_SHORT).show()
-
-                    // Removing the necessary characters
-
-                    // Getting the value
-                    var summaryContentOfItem = summaryDataSnapshot[nameOfTag].toString()
-
-                    // Removing the date
-                    summaryContentOfItem = summaryContentOfItem.drop(12)
-
-                    // Defining the variables to be pushed to the SummaryContentPage
-                    val summaryTitle = nameOfTag
-                    val summaryLastEditDate ="Dummy Variable"
-                    val summaryContent = summaryContentOfItem
-
-                    // Initializing a new intent to go to the next activity
-                    val displaySummaryContent = Intent(this, DisplaySummaryContent:: class.java)
-
-                    // Pushing the data to the next activity
-                    displaySummaryContent.putExtra("Summary Title", summaryTitle)
-                    displaySummaryContent.putExtra("Edit Date", summaryLastEditDate)
-                    displaySummaryContent.putExtra("Summary Content", summaryContent)
-
-                    // Switching to the next activity
-                    startActivity(displaySummaryContent)
-
-
-                }
+//            FirebaseDatabase.getInstance().getReference("Summaries").get()
+//                .addOnSuccessListener{it ->
+//
+//                    val summaryDataSnapshot = it.value as Map<*, *>
+//
+//                    // Getting the name of tag
+//                    val nameOfTag = item.title.text
+//
+//                    // Toast to notify the user that the item has been selected
+//                    Toast.makeText(this, "Going to "+nameOfTag, Toast.LENGTH_SHORT).show()
+//
+//                    // Removing the necessary characters
+//
+//                    // Getting the value
+//                    var summaryContentOfItem = summaryDataSnapshot[nameOfTag].toString()
+//
+//                    // Removing the date
+//                    summaryContentOfItem = summaryContentOfItem.drop(12)
+//
+//                    // Defining the variables to be pushed to the SummaryContentPage
+//                    val summaryTitle = nameOfTag
+//                    val summaryLastEditDate ="Dummy Variable"
+//                    val summaryContent = summaryContentOfItem
+//
+//                    // Initializing a new intent to go to the next activity
+//                    val displaySummaryContent = Intent(this, DisplaySummaryContent:: class.java)
+//
+//                    // Pushing the data to the next activity
+//                    displaySummaryContent.putExtra("Summary Title", summaryTitle)
+//                    displaySummaryContent.putExtra("Edit Date", summaryLastEditDate)
+//                    displaySummaryContent.putExtra("Summary Content", summaryContent)
+//
+//                    // Switching to the next activity
+//                    startActivity(displaySummaryContent)
+//
+//
+//                }
 
         }
 
