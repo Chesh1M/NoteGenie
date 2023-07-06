@@ -116,7 +116,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/round_back_design"
+            android:background="#EC5800"
             android:onClick="viewAnswer"
             android:orientation="vertical"
             android:padding="15dp">
@@ -125,6 +125,7 @@
                 android:id="@+id/flashCardText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/concert_one"
                 android:padding="10dp"
                 android:text="What is the partial derivative of         x^2 + 3x + 7y with respect to x?"
                 android:textColor="#FFFFFF"

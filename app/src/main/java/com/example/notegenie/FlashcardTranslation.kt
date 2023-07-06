@@ -213,7 +213,7 @@ class FlashcardTranslation : AppCompatActivity() {
         summaryContentsTextView.text = "2x+3"
 
         // Changing the color of the card
-        summaryContentCard.setBackgroundColor(Color.parseColor("#EC5800"))
+        summaryContentCard.setBackgroundColor(Color.parseColor("#006DEC"))
 
 
     }
