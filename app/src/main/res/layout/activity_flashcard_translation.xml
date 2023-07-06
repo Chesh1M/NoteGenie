@@ -109,15 +109,15 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
-
         <LinearLayout
-            android:background="@drawable/round_back_design"
+            android:id="@+id/questionCard"
             android:layout_width="match_parent"
             android:layout_height="450dp"
             android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
             android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/round_back_design"
+            android:onClick="viewAnswer"
             android:orientation="vertical"
             android:padding="15dp">
 
@@ -131,13 +131,6 @@
                 android:textSize="35sp"
                 android:textStyle="bold"></TextView>
 
-            <ImageView
-                android:layout_width="500dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
-                android:src="@drawable/equation_pic">
-            </ImageView>
         </LinearLayout>
 
         <LinearLayout

@@ -1,11 +1,14 @@
 package com.example.notegenie
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
@@ -198,5 +201,20 @@ class FlashcardTranslation : AppCompatActivity() {
         languagesMenuView.setOnClickListener{
             changeLanguagePopupMenu.show()
         }
+    }
+
+    // Function to chanmge the text
+    fun viewAnswer(view: View){
+
+        // Initializing the view
+        val summaryContentsTextView: TextView = findViewById(R.id.flashCardText)
+        val summaryContentCard: LinearLayout = findViewById(R.id.questionCard)
+
+        summaryContentsTextView.text = "2x+3"
+
+        // Changing the color of the card
+        summaryContentCard.setBackgroundColor(Color.parseColor("#EC5800"))
+
+
     }
 }
