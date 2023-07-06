@@ -153,7 +153,7 @@ class SummaryPage : AppCompatActivity() {
             // Initializing the content list
             val listofContents = mutableListOf<String>()
 
-            Toast.makeText(this, USERNAME.toString(), Toast.LENGTH_LONG).show()
+//            Toast.makeText(this, USERNAME.toString(), Toast.LENGTH_LONG).show()
 
             // Looping through the values
             for (i in 0 until listOfValuesArray.count()){
