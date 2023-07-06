@@ -29,6 +29,7 @@ class SummaryPage : AppCompatActivity() {
     // Global Variables
     val LIST_OF_LANGUAGES_AVAILABLE = arrayOf("En", "Ch", "Tm")
     var DATA_FROM_FIREBASE = ""
+    val USERNAME = FirebaseAuth.getInstance().currentUser?.email.toString()
 
 
     // Binding the view on create with the view from activity_summary_card.xml
@@ -152,7 +153,7 @@ class SummaryPage : AppCompatActivity() {
             // Initializing the content list
             val listofContents = mutableListOf<String>()
 
-            Toast.makeText(this, listOfValuesArray[0].toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, USERNAME.toString(), Toast.LENGTH_LONG).show()
 
             // Looping through the values
             for (i in 0 until listOfValuesArray.count()){
@@ -241,7 +242,11 @@ class SummaryPage : AppCompatActivity() {
 
 
         }
-        
+
+        // Sample of how to use the calling
+
+//        generateNewSummary("Quantum mechanics", "06-07-2023", "Quantum mechanics is a fundamental theory in physics that provides a description of the physical properties of nature at the scale of atoms and subatomic particles.[2]: 1.1  It is the foundation of all quantum physics including quantum chemistry, quantum field theory, quantum technology, and quantum information science.", listOf("Physics", "sub-atomic particles", "Quantum"))
+
 
 
 
@@ -249,15 +254,15 @@ class SummaryPage : AppCompatActivity() {
     }
 
     // Function that is activated to generate a new summary & tags
-    fun generateNewSummary(view: View, summaryTopic: String, lastEdited: String,
+    fun generateNewSummary(summaryTopic: String, lastEdited: String,
                            summaryContent: String, listOfTags: List<String>){
 
         // Write a message to the database
-        FirebaseDatabase.getInstance().getReference().child("Summaries")
+        FirebaseDatabase.getInstance().getReference().child(USERNAME).child("Summaries")
             .child(summaryTopic).child(lastEdited).setValue(summaryContent);
 
         // Generate tags
-        FirebaseDatabase.getInstance().getReference().child("Tags")
+        FirebaseDatabase.getInstance().getReference().child(USERNAME).child("Tags")
             .child(summaryTopic).setValue(listOfTags);
 
 
