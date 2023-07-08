@@ -3,6 +3,8 @@ package com.example.notegenie
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.Button
@@ -13,11 +15,15 @@ import androidx.core.content.ContextCompat
 import com.example.notegenie.databinding.ActivityHomePageBinding
 import com.google.firebase.auth.FirebaseAuth
 import androidx.appcompat.app.AppCompatActivity
+import java.net.URI
 
 
 class HomePage : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var audioURI: Uri
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
@@ -77,17 +83,43 @@ class HomePage : AppCompatActivity() {
         navigatePagesMenuView.setOnClickListener{
             navPopupMenu.show()
         }
+
     }
 
     // Function to add a file
     fun addFile(view: View){
 
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        val uri = Uri.parse("") // a directory
+        // Initializing an intent
+        val intentAudio: Intent = Intent()
 
-        intent.setDataAndType(uri, "*/*")
-        startActivity(Intent.createChooser(intent, "Open folder"))
+        // Setting the type to get
+        intentAudio.setType("audio/*")
+
+        // Setting the action
+        intentAudio.action = Intent.ACTION_OPEN_DOCUMENT
+
+        // Starting the activity
+        startActivityForResult(Intent.createChooser(intentAudio, "Select File"), 1)
+
+
 
 
     }
-}
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+
+            // Audio is Picked in format of URI
+            if (data != null) {
+                audioURI = data.getData()!!
+            }
+
+            Log.i("Path cocomelon", audioURI.toString())
+        }
+    }
+
+
+    }
