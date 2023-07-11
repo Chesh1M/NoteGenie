@@ -41,7 +41,7 @@ class HomePage : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var selectedFileURI: Uri
-    private val RECORD_REQUEST_CODE = 101
+    private val RECORD_REQUEST_CODE = 111
     private val client = OkHttpClient()
 
 
@@ -209,69 +209,13 @@ class HomePage : AppCompatActivity() {
         val audioFileMediaPlayer = File("/storage/emulated/Lecture Recordings/Part 1.m4a")
 
         // Asking for permission
-        checkForPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE, "External Storage", 111, audioFileMediaPlayer)
+        checkForPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE, "External Storage", RECORD_REQUEST_CODE, audioFileMediaPlayer)
 
 
 
 
 
     }
-
-    // Function to request for permission
-//    private fun requestPermission(audioFileMediaPlayer: File) {
-//
-//
-//
-//
-//        when (PackageManager.PERMISSION_GRANTED) {
-//            ContextCompat.checkSelfPermission(
-//                this,
-//                android.Manifest.permission.READ_EXTERNAL_STORAGE
-//            ) -> {
-//                Toast.makeText(this, "Entered", Toast.LENGTH_LONG).show()
-//
-//                            val fileData = ByteArray(audioFileMediaPlayer.length().toInt())
-//                            val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
-//                            val audioFilePlayer = inputStream.read(fileData)
-//                            inputStream.close()
-//
-//                            // Initializing the api key & link
-//                            val apiKey = "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"
-//                            val apiLink = "https://api.openai.com/v1/audio/transcriptions"
-//
-//                            // Getting the parameters from OpenAI
-//                            val requestBody = """{
-//                                "file": "$audioFilePlayer",
-//                                "model": "whisper-1"
-//                                }
-//                                """
-//
-//                            // Getting a request from Openhttp
-//                            val request = Request.Builder().url(apiLink)
-//                                .addHeader("Content-Type", "multipart/form-data")
-//                                .addHeader("Authorization", "Bearer $apiKey")
-//                    //            .addHeader("file", audioFilePathString)
-//                    //            .addHeader("model", "whisper-1")
-//                                .post(requestBody.toRequestBody("multipart/form-data".toMediaTypeOrNull()))
-//                                .build()
-//
-//
-//                            // Getting the value from whisper
-//                            client.newCall(request).enqueue(object: Callback{
-//                                override fun onFailure(call: Call, e: IOException) {
-//                                    Log.e("OPENAI call error", e.toString())
-//                                }
-//
-//                                override fun onResponse(call: Call, response: Response) {
-//                                    val transcribedText = response.body?.string()
-//                                    Log.i("Transcribed text", transcribedText.toString())
-//                                }
-//                            })
-//            }
-//
-//        }
-//
-//    }
 
     // FUnction to get text from pdf
     fun getTextFromPDF(pdfFilePath: Uri){
@@ -298,13 +242,18 @@ class HomePage : AppCompatActivity() {
                 ContextCompat.checkSelfPermission(applicationContext, permission) == PackageManager.PERMISSION_GRANTED  -> {
                     Toast.makeText(applicationContext, "$name permission granted", Toast.LENGTH_SHORT).show()
 
+                    val fileData = ByteArray(audioFileMediaPlayer.length().toInt())
+                    val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
+                    val audioFilePlayer = inputStream.read(fileData)
+                    inputStream.close()
+
                     // Initializing the api key & link
-                    val apiKey = "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"
+                    val apiKey = "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"
                     val apiLink = "https://api.openai.com/v1/audio/transcriptions"
 
                     // Getting the parameters from OpenAI
                     val requestBody = """{
-                                "file": "$audioFileMediaPlayer",
+                                "file": "$audioFilePlayer",
                                 "model": "whisper-1"
                                 }
                                 """
@@ -313,8 +262,8 @@ class HomePage : AppCompatActivity() {
                     val request = Request.Builder().url(apiLink)
                         .addHeader("Content-Type", "multipart/form-data")
                         .addHeader("Authorization", "Bearer $apiKey")
-                        //            .addHeader("file", audioFilePathString)
-                        //            .addHeader("model", "whisper-1")
+                                    .addHeader("file", audioFileMediaPlayer.name)
+                                    .addHeader("model", "whisper-1")
                         .post(requestBody.toRequestBody("multipart/form-data".toMediaTypeOrNull()))
                         .build()
 
@@ -335,10 +284,6 @@ class HomePage : AppCompatActivity() {
                 else -> ActivityCompat.requestPermissions(this@HomePage, arrayOf(permission), requestCode)
 
             }
-            val fileData = ByteArray(audioFileMediaPlayer.length().toInt())
-            val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
-            val audioFilePlayer = inputStream.read(fileData)
-            inputStream.close()
 
         }
     }
@@ -362,9 +307,9 @@ class HomePage : AppCompatActivity() {
 
     }
 
-//        when (requestCode){
-//            READ_EXTERNAL_STORAGE -> innerCheck("storage")
-//        }
+        when (requestCode){
+            RECORD_REQUEST_CODE -> innerCheck("storage")
+        }
     }
 
     // Function to show the permission dialog
