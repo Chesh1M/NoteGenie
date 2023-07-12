@@ -15,6 +15,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -40,6 +42,9 @@ import java.io.IOException
 class HomePage : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+    private var isReadPermissionGranted = false
+    private var isManagePermissionGranted = false
     private lateinit var selectedFileURI: Uri
     private val RECORD_REQUEST_CODE = 111
     private val client = OkHttpClient()
@@ -49,6 +54,14 @@ class HomePage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
         firebaseAuth = FirebaseAuth.getInstance()
+
+        // Initializing by checking for permissions
+        permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){permission ->
+            isReadPermissionGranted = permission[android.Manifest.permission.READ_EXTERNAL_STORAGE] ?: isReadPermissionGranted
+            isManagePermissionGranted = permission[android.Manifest.permission.MANAGE_EXTERNAL_STORAGE] ?: isManagePermissionGranted
+        }
+
+        requestPermission()
 
         // Status bar color
         window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
@@ -208,8 +221,44 @@ class HomePage : AppCompatActivity() {
         Log.i("File Path", path+"/Lecture Recordings/Part 1.m4a")
         val audioFileMediaPlayer = File("/storage/emulated/Lecture Recordings/Part 1.m4a")
 
-        // Asking for permission
-        checkForPermissions(android.Manifest.permission.READ_EXTERNAL_STORAGE, "External Storage", RECORD_REQUEST_CODE, audioFileMediaPlayer)
+        val fileData = ByteArray(audioFileMediaPlayer.length().toInt())
+        val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
+        val audioFilePlayer = inputStream.read(fileData)
+        inputStream.close()
+
+        // Initializing the api key & link
+        val apiKey = "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"
+        val apiLink = "https://api.openai.com/v1/audio/transcriptions"
+
+        // Getting the parameters from OpenAI
+        val requestBody = """{
+                                "file": "$audioFilePlayer",
+                                "model": "whisper-1"
+                                }
+                                """
+
+        // Getting a request from Openhttp
+        val request = Request.Builder().url(apiLink)
+            .addHeader("Content-Type", "multipart/form-data")
+            .addHeader("Authorization", "Bearer $apiKey")
+            .addHeader("file", audioFileMediaPlayer.name)
+            .addHeader("model", "whisper-1")
+            .post(requestBody.toRequestBody("multipart/form-data".toMediaTypeOrNull()))
+            .build()
+
+
+        // Getting the value from whisper
+        client.newCall(request).enqueue(object: Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("OPENAI call error", e.toString())
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val transcribedText = response.body?.string()
+                Log.i("Transcribed text", transcribedText.toString())
+            }
+        })
+
 
 
 
@@ -236,100 +285,36 @@ class HomePage : AppCompatActivity() {
         }
     }
 
-    private fun checkForPermissions(permission: String, name: String, requestCode: Int, audioFileMediaPlayer: File){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            when{
-                ContextCompat.checkSelfPermission(applicationContext, permission) == PackageManager.PERMISSION_GRANTED  -> {
-                    Toast.makeText(applicationContext, "$name permission granted", Toast.LENGTH_SHORT).show()
+    private fun requestPermission(){
+        isReadPermissionGranted = ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
 
-                    val fileData = ByteArray(audioFileMediaPlayer.length().toInt())
-                    val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
-                    val audioFilePlayer = inputStream.read(fileData)
-                    inputStream.close()
+        isManagePermissionGranted = ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.MANAGE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
 
-                    // Initializing the api key & link
-                    val apiKey = "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"
-                    val apiLink = "https://api.openai.com/v1/audio/transcriptions"
+        val permissionRequest: MutableList<String> = ArrayList()
 
-                    // Getting the parameters from OpenAI
-                    val requestBody = """{
-                                "file": "$audioFilePlayer",
-                                "model": "whisper-1"
-                                }
-                                """
+        if(!isReadPermissionGranted){
 
-                    // Getting a request from Openhttp
-                    val request = Request.Builder().url(apiLink)
-                        .addHeader("Content-Type", "multipart/form-data")
-                        .addHeader("Authorization", "Bearer $apiKey")
-                                    .addHeader("file", audioFileMediaPlayer.name)
-                                    .addHeader("model", "whisper-1")
-                        .post(requestBody.toRequestBody("multipart/form-data".toMediaTypeOrNull()))
-                        .build()
-
-
-                    // Getting the value from whisper
-                    client.newCall(request).enqueue(object: Callback{
-                        override fun onFailure(call: Call, e: IOException) {
-                            Log.e("OPENAI call error", e.toString())
-                        }
-
-                        override fun onResponse(call: Call, response: Response) {
-                            val transcribedText = response.body?.string()
-                            Log.i("Transcribed text", transcribedText.toString())
-                        }
-                    })
-                }
-                shouldShowRequestPermissionRationale(permission) -> showDialog(permission, name, requestCode)
-                else -> ActivityCompat.requestPermissions(this@HomePage, arrayOf(permission), requestCode)
-
-            }
-
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        fun innerCheck(name: String){
-        if (grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED){
-
-            Toast.makeText(this, "$name permission refused", Toast.LENGTH_LONG).show()
-
-        }else{
-
-            Toast.makeText(this, "$name permission granted", Toast.LENGTH_LONG).show()
+            permissionRequest.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
 
         }
 
+        if(!isManagePermissionGranted){
 
+            permissionRequest.add(android.Manifest.permission.MANAGE_EXTERNAL_STORAGE)
 
-    }
-
-        when (requestCode){
-            RECORD_REQUEST_CODE -> innerCheck("storage")
-        }
-    }
-
-    // Function to show the permission dialog
-    private fun showDialog(permission: String, name: String, requestCode: Int){
-
-        // Initializing the dialog
-        val builder = AlertDialog.Builder(this)
-
-        // Building the dialog
-        builder.apply {
-            setMessage("Permission to access your $name")
-            setTitle("Permission required")
-            setPositiveButton("OK"){dialog, which ->
-                ActivityCompat.requestPermissions(this@HomePage, arrayOf(permission), requestCode)
-            }
         }
 
-        // Creating a dialog
-        val dialog = builder.create()
-        dialog.show()
+        if (permissionRequest.isNotEmpty()){
+            permissionLauncher.launch(permissionRequest.toTypedArray())
+        }
+
+
     }
 
 
