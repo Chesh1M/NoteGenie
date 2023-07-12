@@ -1,13 +1,12 @@
 package com.example.notegenie
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.media.audiofx.Equalizer.Settings
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.util.Base64InputStream
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -15,23 +14,21 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.google.android.gms.common.api.GoogleApi
 import com.google.firebase.auth.FirebaseAuth
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.File
@@ -45,6 +42,7 @@ class HomePage : AppCompatActivity() {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var isReadPermissionGranted = false
     private var isManagePermissionGranted = false
+    private var isInternetPermissionGranted = false
     private lateinit var selectedFileURI: Uri
     private val RECORD_REQUEST_CODE = 111
     private val client = OkHttpClient()
@@ -59,6 +57,7 @@ class HomePage : AppCompatActivity() {
         permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){permission ->
             isReadPermissionGranted = permission[android.Manifest.permission.READ_EXTERNAL_STORAGE] ?: isReadPermissionGranted
             isManagePermissionGranted = permission[android.Manifest.permission.MANAGE_EXTERNAL_STORAGE] ?: isManagePermissionGranted
+            isInternetPermissionGranted = permission[android.Manifest.permission.INTERNET] ?: isInternetPermissionGranted
         }
 
         requestPermission()
@@ -197,11 +196,17 @@ class HomePage : AppCompatActivity() {
             Toast.makeText(this, fileType, Toast.LENGTH_LONG).show()
             if (fileType == "m4a" || fileType=="mp3" || fileType=="wav"){
 
-                callWhisperModel(selectedFileURI){response ->
+                callCHATGPT("What is kotlin?"){response ->
                     runOnUiThread {
-                        Log.i("Response from whisper", response.toString())
+                        Log.i("Response from GPT", response.toString())
                     }
                 }
+
+//                callWhisperModel(selectedFileURI){response ->
+//                    runOnUiThread {
+//                        Log.i("Response from whisper", response.toString())
+//                    }
+//                }
 
             } else{
                 getTextFromPDF(selectedFileURI)
@@ -210,6 +215,7 @@ class HomePage : AppCompatActivity() {
     }
 
     // Function to call the Whisper model
+    @OptIn(ExperimentalUnsignedTypes::class)
     @RequiresApi(Build.VERSION_CODES.O)
     fun callWhisperModel(audioFilePath: Uri, callBack: (String) -> Unit){
 
@@ -220,11 +226,11 @@ class HomePage : AppCompatActivity() {
 
         Log.i("File Path", path+"/Lecture Recordings/Part 1.m4a")
         val audioFileMediaPlayer = File("/storage/emulated/Lecture Recordings/Part 1.m4a")
+        val audioFileMediaPlayerBytes = File("/storage/emulated/Lecture Recordings/Test.m4a").readBytes().asUByteArray()
 
-        val fileData = ByteArray(audioFileMediaPlayer.length().toInt())
         val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
-        val audioFilePlayer = inputStream.read(fileData)
-        inputStream.close()
+        val base64File = Base64InputStream(inputStream, 1)
+
 
         // Initializing the api key & link
         val apiKey = "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"
@@ -232,7 +238,7 @@ class HomePage : AppCompatActivity() {
 
         // Getting the parameters from OpenAI
         val requestBody = """{
-                                "file": "$audioFilePlayer",
+                                "file": "$audioFileMediaPlayerBytes",
                                 "model": "whisper-1"
                                 }
                                 """
@@ -243,9 +249,8 @@ class HomePage : AppCompatActivity() {
             .addHeader("Authorization", "Bearer $apiKey")
             .addHeader("file", audioFileMediaPlayer.name)
             .addHeader("model", "whisper-1")
-            .post(requestBody.toRequestBody("multipart/form-data".toMediaTypeOrNull()))
+            .post(audioFileMediaPlayer.asRequestBody(MEDIA_TYPE_AUDIO))
             .build()
-
 
         // Getting the value from whisper
         client.newCall(request).enqueue(object: Callback{
@@ -285,6 +290,50 @@ class HomePage : AppCompatActivity() {
         }
     }
 
+    // Function to call CHATGPT
+    fun callCHATGPT(question: String, param: (Any) -> Unit){
+
+        // Initializing the api key & link
+        val apiKey = "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"
+        val apiLink = "https://api.openai.com/v1/completions"
+
+        // Getting the parameters from OpenAI
+        val requestBody = """{
+  "model": "text-davinci-003",
+  "prompt": "Say this is a test",
+  "max_tokens": 7,
+  "temperature": 0,
+  "top_p": 1,
+  "n": 1,
+  "stream": false,
+  "logprobs": null,
+  "stop": "\n"
+}
+"""
+
+        // Getting a request from Openhttp
+        val request = Request.Builder().url(apiLink)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Authorization", "Bearer $apiKey")
+            .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+            .build()
+
+        // Getting the value from Chat GPT
+        client.newCall(request).enqueue(object: Callback{
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("OPENAI call error", e.toString())
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val transcribedText = response.body?.string()
+                Log.i("Question: $question", transcribedText.toString())
+            }
+        })
+
+    }
+
+
+    // Official function to request for permissions
     private fun requestPermission(){
         isReadPermissionGranted = ContextCompat.checkSelfPermission(
             this,
@@ -294,6 +343,11 @@ class HomePage : AppCompatActivity() {
         isManagePermissionGranted = ContextCompat.checkSelfPermission(
             this,
             android.Manifest.permission.MANAGE_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+
+        isInternetPermissionGranted = ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.INTERNET
         ) == PackageManager.PERMISSION_GRANTED
 
         val permissionRequest: MutableList<String> = ArrayList()
@@ -310,6 +364,12 @@ class HomePage : AppCompatActivity() {
 
         }
 
+        if(!isInternetPermissionGranted){
+
+            permissionRequest.add(android.Manifest.permission.INTERNET)
+
+        }
+
         if (permissionRequest.isNotEmpty()){
             permissionLauncher.launch(permissionRequest.toTypedArray())
         }
@@ -318,10 +378,17 @@ class HomePage : AppCompatActivity() {
     }
 
 
-
-
-
-
-
-
+    companion object {
+        val MEDIA_TYPE_AUDIO = "multipart/form-data".toMediaType()
     }
+
+
+
+
+
+
+
+
+
+
+}
