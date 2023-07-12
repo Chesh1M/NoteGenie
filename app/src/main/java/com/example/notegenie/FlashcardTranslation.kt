@@ -16,8 +16,22 @@ import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.IOException
+import java.util.Timer
+import kotlin.concurrent.schedule
 
 class FlashcardTranslation : AppCompatActivity() {
+    // okhttp for API calls
+    private val client = OkHttpClient()
 
     // Initializing Global Variables
     var CURRENT_LANGUAGE = "En"
@@ -190,11 +204,7 @@ class FlashcardTranslation : AppCompatActivity() {
                         Log.i("Translation Status:", "Error Translating")
                     }
             }
-
             false
-
-
-
         }
 
         // Setting an onclick listener for the changeLanguageImageView
@@ -203,18 +213,126 @@ class FlashcardTranslation : AppCompatActivity() {
         }
     }
 
-    // Function to chanmge the text
+    // Display Question
+    fun displayQn(view: View){
+        // Initializing the view
+        val summaryContentsTextView: TextView = findViewById(R.id.flashCardText)
+
+        // Dummy summary text
+        val summary = "Let f be a function, and c and L real numbers. Suppose that as x gets closer to c from either side (but never reaches c), the y-values f (x) get closer to the same number L. Then we will write limx→c f (x) = L, read “the limit as x approaches c of f (x) is L.” We may also shorten this to “as x → c then f (x) → L. Let f be a function and suppose f (a) exists. Then the limit lim h→0 f (a + h) − f (a) h , (1) if it exists, is called the derivative of f at a, and will be denoted by f 0 (a). The function is then said to be differentiable at x = a. Figure 1: The graph of a function f (x), two points on this function—(a, f (a)) (in black) and (a+h, f (a+h)) (in blue)—and the secant line (dashed) passing through those two points. (I explain what the red line is below.) Notice that the quantity (a +h)− a in the denominator of (2) is the change in the x-value of f from x = a to x = a + h; let’s call that change ∆x (read “change in x”), so that ∆x = (a + h) − a. That change in input produces a change in output ( y-values) of f (a + h) − f (a). Let’s call that change ∆y, so that ∆y = f (a + h) − f (a). Then (2) becomes f (a + h) − f (a) h = f (a + h) − f (a) (a + h) − a = ∆y ∆x . The quantity all the way on the right is the slope of the line connecting the points (a, f (a)) and (a + h, f (a + h)) in Figure 1 (the dashed line in the figure). That line is called the secant line. Returning to Definition 2, the limit in (1) then becomes lim ∆x→0 ∆y ∆x (since ∆x = (a + h) − a = h, so that h → 0 is equivalent to ∆x → 0). Thus, if the derivative exists, we have f 0 (a) = lim ∆x→0 ∆y ∆x , (3) which tells us that the derivative is the limit of the slopes of the secant lines through (a, f (a)) and (a +h, f (a +h)) as the right-endpoint used to calculate those slopes gets closer to the left-endpoint (i.e., ∆x → 0). The resulting line—the red line in Figure 1—is called the tangent line, so named because if you zoom in to the point (a, f (a)) in Figure 1, the line is tangent to the graph of f (x) at the point (a, f (a))."
+
+        generateQuestion(summary) {response ->
+            runOnUiThread {
+                summaryContentsTextView.text = response
+            }
+        }
+    } // End of Display Question
+
+    // Generate Question
+    fun generateQuestion(summary:String, callback:(String) ->  Unit){
+        val apiKey="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"
+        val url="https://api.openai.com/v1/engines/text-davinci-003/completions"
+        // call gpt api to generate question based on summary passed in
+        val requestBody="""
+            {
+            "prompt": "Please come up with a different test question based on the notes provided here: $summary",
+            "max_tokens": 500,
+            "temperature": 0
+            }
+        """.trimIndent()
+
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Authorization", "Bearer $apiKey")
+            .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("error", "API failed", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body=response.body?.string()
+                if (body != null) {
+                    Log.v("data",body)
+                }
+                else {
+                    Log.v("data", "empty")
+                }
+                val jsonObject=JSONObject(body)
+                val jsonArray:JSONArray=jsonObject.getJSONArray("choices")
+                val textResult=jsonArray.getJSONObject(0).getString("text")
+                callback(textResult)
+
+                /* TODO:
+                *   Return the textResult as a var instead (flashcardQn)
+                *   so that the viewAswer function can use it to generate the answer */
+            }
+        })
+
+    } // End of Generate Question
+
+    // Reveal Answer
     fun viewAnswer(view: View){
 
         // Initializing the view
         val summaryContentsTextView: TextView = findViewById(R.id.flashCardText)
         val summaryContentCard: LinearLayout = findViewById(R.id.questionCard)
 
-        summaryContentsTextView.text = "2x+3"
 
-        // Changing the color of the card
-        summaryContentCard.setBackgroundColor(Color.parseColor("#006DEC"))
+        // dummy flashcard question
+        val flashcardQn = "Hi how are you?"
 
+        // Changing text from qn to ans
+        generateAnswer(flashcardQn) {response ->
+            runOnUiThread {
+                summaryContentsTextView.text = response
+                summaryContentCard.setBackgroundColor(Color.parseColor("#006DEC"))
+            }
+        }
+    } // End of Reveal Answer
 
-    }
+    // Generate Answer
+    fun generateAnswer(flashcardQn:String, callback:(String) ->  Unit){
+        val apiKey="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"
+        val url="https://api.openai.com/v1/engines/text-davinci-003/completions"
+        // call gpt api to generate answer based on question passed in
+        val requestBody="""
+            {
+            "prompt": "$flashcardQn",
+            "max_tokens": 500,
+            "temperature": 0
+            }
+        """.trimIndent()
+
+        val request = Request.Builder()
+            .url(url)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Authorization", "Bearer $apiKey")
+            .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("error", "API failed", e)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body=response.body?.string()
+                if (body != null) {
+                    Log.v("data",body)
+                }
+                else {
+                    Log.v("data", "empty")
+                }
+                val jsonObject=JSONObject(body)
+                val jsonArray:JSONArray=jsonObject.getJSONArray("choices")
+                val textResult=jsonArray.getJSONObject(0).getString("text")
+                callback(textResult)
+            }
+        })
+    } // End of Generate Answer
+
 }

@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/concert_one"
                 android:padding="10dp"
-                android:text="What is the partial derivative of         x^2 + 3x + 7y with respect to x?"
+                android:text="@string/flashcardBanner"
                 android:textColor="#FFFFFF"
                 android:textSize="35sp"
                 android:textStyle="bold"></TextView>
@@ -155,7 +155,8 @@
                     android:drawableRight="@drawable/cross"
                     android:paddingRight="38dp"
                     android:layout_marginTop="100dp"
-                    android:background="@drawable/wrong_btn">
+                    android:background="@drawable/wrong_btn"
+                    android:onClick="displayQn">
 
                 </androidx.appcompat.widget.AppCompatButton>
 
@@ -169,7 +170,8 @@
                     android:paddingRight="38dp"
                     android:layout_marginTop="100dp"
                     android:drawableRight="@drawable/tick"
-                    android:background="@drawable/correct_btn">
+                    android:background="@drawable/correct_btn"
+                    android:onClick="displayQn">
 
                 </androidx.appcompat.widget.AppCompatButton>
             </RelativeLayout>

@@ -11,6 +11,7 @@
     <string name="loginWithGoogle">LOGIN WITH GOOGLE</string>
     <string name="newUserInfo">If you are a new user, click</string>
     <string name="existingAccountInfo">Already have an account?</string>
+    <string name="flashcardBanner">Click on either the tick or cross to start!</string>
 
     <string-array name="Languages">
         <item>English</item>
