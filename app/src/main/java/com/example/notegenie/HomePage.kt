@@ -255,10 +255,18 @@ class HomePage : AppCompatActivity() {
                                 // If it is the last page
                                 if (i == (arrayOfLectureSlideFiles.size)-1){
 
-                                    Toast.makeText(this, "i: $i vs Size: ${arrayOfLectureSlideFiles.size.toString()}", Toast.LENGTH_LONG).show()
-
                                     // Combining all the elements within that list
                                     val rawContentOfLecture = listOfContentPerPage.joinToString("NEWPAGE")
+
+                                    // Changing the Intent to the Add Summary page
+                                    // Initializing a new intent to go to the next activity
+                                    val addSummaryPageIntent = Intent(this, AddSummaryPage:: class.java)
+
+                                    // Pushing the data to the next activity
+                                    addSummaryPageIntent.putExtra("Summary Content", rawContentOfLecture)
+
+                                    // Switching to the next activity
+                                    startActivity(addSummaryPageIntent)
 
                                     Log.i("Lecture content", rawContentOfLecture)
 
