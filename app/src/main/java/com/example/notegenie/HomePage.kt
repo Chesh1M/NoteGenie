@@ -19,7 +19,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import okhttp3.Call
@@ -31,6 +35,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import okio.Path.Companion.toPath
 import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
@@ -42,6 +47,7 @@ class HomePage : AppCompatActivity() {
     private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private var isReadPermissionGranted = false
     private var isManagePermissionGranted = false
+    private var isAccessNetworkStatePermissionGranted = false
     private var isInternetPermissionGranted = false
     private lateinit var selectedFileURI: Uri
     private val RECORD_REQUEST_CODE = 111
@@ -58,6 +64,7 @@ class HomePage : AppCompatActivity() {
             isReadPermissionGranted = permission[android.Manifest.permission.READ_EXTERNAL_STORAGE] ?: isReadPermissionGranted
             isManagePermissionGranted = permission[android.Manifest.permission.MANAGE_EXTERNAL_STORAGE] ?: isManagePermissionGranted
             isInternetPermissionGranted = permission[android.Manifest.permission.INTERNET] ?: isInternetPermissionGranted
+            isAccessNetworkStatePermissionGranted = permission[android.Manifest.permission.ACCESS_NETWORK_STATE] ?: isAccessNetworkStatePermissionGranted
         }
 
         requestPermission()
@@ -190,13 +197,11 @@ class HomePage : AppCompatActivity() {
             }
 
             // Getting the type of the file
-            val fileType = selectedFileURI.toString().split(".").last().toString()
+            val fileType = "folder"
 
-            // If the file is an audio file
-            Toast.makeText(this, fileType, Toast.LENGTH_LONG).show()
             if (fileType == "m4a" || fileType=="mp3" || fileType=="wav"){
 
-                callCHATGPT("What is kotlin?"){response ->
+                callCHATGPT("How are you today?"){response ->
                     runOnUiThread {
                         Log.i("Response from GPT", response.toString())
                     }
@@ -208,8 +213,72 @@ class HomePage : AppCompatActivity() {
 //                    }
 //                }
 
-            } else{
-                getTextFromPDF(selectedFileURI)
+            } else{ // The file is a collection of lecture slides
+
+                // Getting the folder path from user
+                val folderPathFromUser = "/Documents/Lecture Slides"
+
+                // Appending it to make it look like a legit directory
+                val actualFolderPath = Environment.getExternalStorageDirectory().path.toString()+folderPathFromUser
+
+                // Getting all the files inside the directory
+                val lectureSlideFile = File(actualFolderPath)
+                val arrayOfLectureSlideFiles = lectureSlideFile.listFiles()
+
+                // Initializing a list for the content
+                val listOfContentPerPage = mutableListOf<String>()
+
+                // Google ML-Kit
+                // When using Latin script library
+                val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
+                // Looping through all the slide images
+                for (i in arrayOfLectureSlideFiles.indices){
+
+                    // Getting the current file name
+                    val currFileDirectory = arrayOfLectureSlideFiles.get(i).toString()
+
+                    // Applying the Text recognition api from ML tool kit
+
+                    val image: InputImage
+                    try {
+                        // Input Image
+                        image = InputImage.fromFilePath(this, Uri.fromFile(File(currFileDirectory)))
+
+                        // Handling the request
+                        val result = recognizer.process(image)
+                            .addOnSuccessListener { visionText ->
+
+                                // Getting the content that ML Kit read
+                                listOfContentPerPage.add(visionText.text)
+
+                                // If it is the last page
+                                if (i == (arrayOfLectureSlideFiles.size)-1){
+
+                                    Toast.makeText(this, "i: $i vs Size: ${arrayOfLectureSlideFiles.size.toString()}", Toast.LENGTH_LONG).show()
+
+                                    // Combining all the elements within that list
+                                    val rawContentOfLecture = listOfContentPerPage.joinToString("NEWPAGE")
+
+                                    Log.i("Lecture content", rawContentOfLecture)
+
+                                }
+                            }
+                            .addOnFailureListener { e ->
+                                Log.e("Error extracting text from image", e.toString())
+                            }
+
+                    } catch (e: IOException) {
+                        Log.i("The URI", Uri.fromFile(File(currFileDirectory)).toString())
+                        e.printStackTrace()
+                    }
+                }
+
+
+
+
+
+
             }
         }
     }
@@ -225,29 +294,29 @@ class HomePage : AppCompatActivity() {
         val path = Environment.getExternalStorageDirectory().path.toString()
 
         Log.i("File Path", path+"/Lecture Recordings/Part 1.m4a")
-        val audioFileMediaPlayer = File("/storage/emulated/Lecture Recordings/Part 1.m4a")
-        val audioFileMediaPlayerBytes = File("/storage/emulated/Lecture Recordings/Test.m4a").readBytes().asUByteArray()
+        val audioFileMediaPlayer = File("/storage/emulated/Lecture Recordings/whisperTest.wav")
+//        val audioFileMediaPlayerBytes = File("/storage/emulated/Lecture Recordings/Test.m4a").readBytes().asUByteArray()
 
-        val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
-        val base64File = Base64InputStream(inputStream, 1)
+//        val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
+//        val base64File = Base64InputStream(inputStream, 1)
 
 
         // Initializing the api key & link
-        val apiKey = "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"
+        val apiKey = "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"
         val apiLink = "https://api.openai.com/v1/audio/transcriptions"
 
         // Getting the parameters from OpenAI
         val requestBody = """{
-                                "file": "$audioFileMediaPlayerBytes",
+                                "file": "audio.mp3",
                                 "model": "whisper-1"
                                 }
                                 """
 
         // Getting a request from Openhttp
         val request = Request.Builder().url(apiLink)
-            .addHeader("Content-Type", "multipart/form-data")
             .addHeader("Authorization", "Bearer $apiKey")
-            .addHeader("file", audioFileMediaPlayer.name)
+            .addHeader("Content-Type", "multipart/form-data")
+            .addHeader("file", "$audioFileMediaPlayer")
             .addHeader("model", "whisper-1")
             .post(audioFileMediaPlayer.asRequestBody(MEDIA_TYPE_AUDIO))
             .build()
@@ -294,7 +363,7 @@ class HomePage : AppCompatActivity() {
     fun callCHATGPT(question: String, param: (Any) -> Unit){
 
         // Initializing the api key & link
-        val apiKey = "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"
+        val apiKey = "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"
         val apiLink = "https://api.openai.com/v1/completions"
 
         // Getting the parameters from OpenAI
@@ -350,6 +419,11 @@ class HomePage : AppCompatActivity() {
             android.Manifest.permission.INTERNET
         ) == PackageManager.PERMISSION_GRANTED
 
+        isAccessNetworkStatePermissionGranted = ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.ACCESS_NETWORK_STATE
+        ) == PackageManager.PERMISSION_GRANTED
+
         val permissionRequest: MutableList<String> = ArrayList()
 
         if(!isReadPermissionGranted){
@@ -370,9 +444,16 @@ class HomePage : AppCompatActivity() {
 
         }
 
+        if(!isAccessNetworkStatePermissionGranted){
+
+            permissionRequest.add(android.Manifest.permission.ACCESS_NETWORK_STATE)
+
+        }
+
         if (permissionRequest.isNotEmpty()){
             permissionLauncher.launch(permissionRequest.toTypedArray())
         }
+
 
 
     }

@@ -9,7 +9,7 @@
     android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/summaryCard"
+        android:id="@+id/summaryTitleCard"
         android:layout_width="328dp"
         android:layout_height="68dp"
         android:layout_gravity="center_horizontal"
@@ -61,7 +61,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/summaryCard" />
+        app:layout_constraintTop_toBottomOf="@+id/summaryTitleCard" />
 
 </LinearLayout>
 
