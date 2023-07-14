@@ -72,7 +72,7 @@ class AddSummaryPage : AppCompatActivity() {
 
 //        saveSummaryToFirebase("Circuit Analysis", currentDate, "This is very interesting")
 
-        callChatGPT(this,"$cleanedTextSummary Tl;dr"){response ->
+        callChatGPT(this,"Summarize this for a second-grade student: $cleanedTextSummary"){response ->
             runOnUiThread {
                 Log.i("Response from GPT", response.toString())
             }
@@ -163,7 +163,6 @@ class AddSummaryPage : AppCompatActivity() {
                 // Initializing the text view
                 val displaySummaryContentTextView: TextView = findViewById(R.id.summaryContentsView)
 
-                Log.i("Answer from ChatGPT", answerFromChatGPT)
 
                 // Posting the text onto the Text View
                 val handler = Handler(Looper.getMainLooper())
@@ -208,9 +207,6 @@ class AddSummaryPage : AppCompatActivity() {
                     })
                 }
 
-
-
-//                Log.i("Question: $question", answerFromChatGPT)
             }
         })
 
