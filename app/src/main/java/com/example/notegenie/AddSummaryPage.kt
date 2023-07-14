@@ -2,19 +2,23 @@ package com.example.notegenie
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.service.autofill.UserData
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -31,7 +35,12 @@ import java.util.concurrent.TimeUnit
 class AddSummaryPage : AppCompatActivity() {
 
     // Initializing the global variables
-    private val client = OkHttpClient()
+    private val client = OkHttpClient().newBuilder()
+        .connectTimeout(2, TimeUnit.MINUTES)
+        .writeTimeout(2, TimeUnit.MINUTES)
+        .readTimeout(2, TimeUnit.MINUTES)
+        .build() // Overcame the timeout error
+    val gson = Gson()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +81,7 @@ class AddSummaryPage : AppCompatActivity() {
 
 //        saveSummaryToFirebase("Circuit Analysis", currentDate, "This is very interesting")
 
-        callChatGPT("Summarize this for a second-grade student: $cleanedTextSummary"){response -> // "around 300 words" THIS IS IMPORTANT DO NOT REMOVE!!
+        callChatGPT("Summarize this for a second-grade student in minimum 500 words: $cleanedTextSummary"){response -> // "around 300 words" THIS IS IMPORTANT DO NOT REMOVE!!
             runOnUiThread {
                 Log.i("Response from GPT", response.toString())
             }
@@ -139,8 +148,11 @@ class AddSummaryPage : AppCompatActivity() {
                 Log.e("OPENAI call error", e.toString())
             }
 
+            @RequiresApi(Build.VERSION_CODES.P)
             override fun onResponse(call: Call, response: Response) {
                 val transcribedText = response.body?.string()
+
+
 
                 // Removing the first set of strings
                 var answerFromChatGPT = transcribedText.toString().split("\"content\": ")[1]
@@ -215,7 +227,7 @@ class AddSummaryPage : AppCompatActivity() {
                                 answerFromChatGPT = answerFromChatGPT.replace("\\r", " ")
 
 
-                                generateMindMap(titleOfSummary.toString(),"Extract keywords from this text: $question, I just want the text in list form and nothing extra"){response -> //I just want the text in list form and nothing extra THIS IS IMPORTANT DO NOT REMOVE!!
+                                generateMindMap(titleOfSummary.toString(),"Extract keywords (maximum 3 words each) from this text: $question, I just want the text in list form and nothing extra"){response -> //I just want the text in list form and nothing extra THIS IS IMPORTANT DO NOT REMOVE!!
                                     runOnUiThread {
                                         Log.i("Response from GPT", response.toString())
                                     }
@@ -313,7 +325,7 @@ class AddSummaryPage : AppCompatActivity() {
 
         // Getting the parameters from OpenAI
         val requestBody = """{
-  "model": "gpt-3.5-turbo",
+  "model": "gpt-3.5-turbo-16k",
   "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "'$generatedSummary'"}]
 }
 """
@@ -322,7 +334,7 @@ class AddSummaryPage : AppCompatActivity() {
         val request = Request.Builder().url(apiLink)
             .addHeader("Content-Type", "application/json")
             .addHeader("Authorization", "Bearer $apiKey")
-            .addHeader("model", "gpt-3.5-turbo")
+            .addHeader("model", "gpt-3.5-turbo-16k")
             .addHeader("messages", "{\"role\": \"user\", \"content\": \"Hello!\"}")
             .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
             .build()
@@ -377,6 +389,21 @@ class AddSummaryPage : AppCompatActivity() {
 
                 // Converting the string to a list of tags and removing the unnecessary element
                 val generatedTagsList = generatedTagsString.split("\\n- ").toMutableList()
+
+                // Initializing a cleaned version
+                val cleanedGeneratedTagsList = mutableListOf<String>()
+
+                // Cleaning each of the elements in the list
+                // Cleaning the text
+                val re = Regex("[^A-Za-z0-9 ]")
+
+                // Looping through each tag to clean
+                generatedTagsList.forEach{ tag ->
+
+                    // Cleaning the tags
+                    cleanedGeneratedTagsList.add(re.replace(tag, "").lowercase())
+
+                }
 
                 // Adding the List to database
                 // Storing into database
