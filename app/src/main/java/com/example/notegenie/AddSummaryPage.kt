@@ -72,7 +72,7 @@ class AddSummaryPage : AppCompatActivity() {
 
 //        saveSummaryToFirebase("Circuit Analysis", currentDate, "This is very interesting")
 
-        callChatGPT(this,"Turn this note into a summary: $cleanedTextSummary"){response ->
+        callChatGPT(this,"$cleanedTextSummary Tl;dr"){response ->
             runOnUiThread {
                 Log.i("Response from GPT", response.toString())
             }
@@ -156,7 +156,8 @@ class AddSummaryPage : AppCompatActivity() {
                 answerFromChatGPT = answerFromChatGPT.substring(0, answerFromChatGPT.length-1)
 
                 // Removing a few newances
-                answerFromChatGPT = answerFromChatGPT.replace("\\n'\\n", " ")
+                answerFromChatGPT = answerFromChatGPT.replace("\\n\\n", " ")
+                answerFromChatGPT = answerFromChatGPT.replace("\\n", " ")
                 answerFromChatGPT = answerFromChatGPT.replace("Summary: ", "")
 
                 // Initializing the text view
