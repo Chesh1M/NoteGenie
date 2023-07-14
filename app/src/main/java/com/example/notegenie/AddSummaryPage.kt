@@ -72,7 +72,7 @@ class AddSummaryPage : AppCompatActivity() {
 
 //        saveSummaryToFirebase("Circuit Analysis", currentDate, "This is very interesting")
 
-        callChatGPT(this,"Summarize this for a second-grade student: $cleanedTextSummary"){response ->
+        callChatGPT("Summarize this for a second-grade student: $cleanedTextSummary"){response -> // "around 300 words" THIS IS IMPORTANT DO NOT REMOVE!!
             runOnUiThread {
                 Log.i("Response from GPT", response.toString())
             }
@@ -80,7 +80,7 @@ class AddSummaryPage : AppCompatActivity() {
     }
 
     // FUnction to call ChatGPT
-    fun callChatGPT(onSummayPageContext: Context,question: String, param: (Any) -> Unit){
+    fun callChatGPT(question: String, param: (Any) -> Unit){
 
         // Getting the current date
         val sdf = SimpleDateFormat("dd-MM-yyyy")
@@ -97,7 +97,7 @@ class AddSummaryPage : AppCompatActivity() {
 
         // Getting the parameters from OpenAI
         val requestBody = """{
-  "model": "gpt-3.5-turbo",
+  "model": "gpt-3.5-turbo-16k",
   "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "'$question'"}]
 }
 """
@@ -106,7 +106,7 @@ class AddSummaryPage : AppCompatActivity() {
         val request = Request.Builder().url(apiLink)
             .addHeader("Content-Type", "application/json")
             .addHeader("Authorization", "Bearer $apiKey")
-            .addHeader("model", "gpt-3.5-turbo")
+            .addHeader("model", "gpt-3.5-turbo-16k")
             .addHeader("messages", "{\"role\": \"user\", \"content\": \"Hello!\"}")
             .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
             .build()
@@ -198,6 +198,29 @@ class AddSummaryPage : AppCompatActivity() {
                                     .child("Summaries")
                                     .child(titleOfSummary.toString()).child(currentDate).setValue(answerFromChatGPT);
 
+                                Log.i("Answer from CHATGPT", answerFromChatGPT.toString().dropLast(2))
+
+                                // Generating the mind-map
+
+                                // Cleaning the summarised text
+                                val re = Regex("[^A-Za-z0-9 ]")
+                                val cleanToSummarisedText = re.replace(answerFromChatGPT, "")
+
+                                // Cleaning for the JSON request
+                                answerFromChatGPT = cleanTextForJSON(cleanToSummarisedText)
+
+                                // Replacing the new-line characters
+                                answerFromChatGPT = answerFromChatGPT.replace("\\n", " ")
+                                answerFromChatGPT = answerFromChatGPT.replace("\\n\\n", " ")
+                                answerFromChatGPT = answerFromChatGPT.replace("\\r", " ")
+
+
+                                generateMindMap(titleOfSummary.toString(),"Extract keywords from this text: $question, I just want the text in list form and nothing extra"){response -> //I just want the text in list form and nothing extra THIS IS IMPORTANT DO NOT REMOVE!!
+                                    runOnUiThread {
+                                        Log.i("Response from GPT", response.toString())
+                                    }
+                                }
+
                             }
                         }
 
@@ -280,8 +303,96 @@ class AddSummaryPage : AppCompatActivity() {
         }
     }
 
-    // Function to get the embeddings from OPENAI
+    // Function to generate MegaMindMap
+    fun generateMindMap(summaryTitle: String,generatedSummary: String, param: (Any) -> Unit){
 
+
+        // Initializing the api key & link
+        val apiKey = "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"
+        val apiLink = "https://api.openai.com/v1/chat/completions"
+
+        // Getting the parameters from OpenAI
+        val requestBody = """{
+  "model": "gpt-3.5-turbo",
+  "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "'$generatedSummary'"}]
+}
+"""
+
+        // Getting a request from Openhttp
+        val request = Request.Builder().url(apiLink)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Authorization", "Bearer $apiKey")
+            .addHeader("model", "gpt-3.5-turbo")
+            .addHeader("messages", "{\"role\": \"user\", \"content\": \"Hello!\"}")
+            .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+            .build()
+
+//        // Initializing the api key & link
+//        val apiKey = "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"
+//        val apiLink = "https://api.openai.com/v1/completions"
+//
+//        // Getting the parameters from OpenAI
+//        val requestBody = """{
+//  "model": "text-davinci-003",
+//  "prompt": "Say this is a test"
+//"""
+//
+//        // Getting a request from Openhttp
+//        val request = Request.Builder().url(apiLink)
+//            .addHeader("Content-Type", "application/json")
+//            .addHeader("Authorization", "Bearer $apiKey")
+//            .addHeader("model", "text-davinci-003")
+//            .addHeader("prompt", generatedSummary)
+//            .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+//            .build()
+
+
+        // Getting the value from Chat GPT
+        client.newCall(request).enqueue(object: Callback {
+
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("OPENAI call error", e.toString())
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+
+                val generatedTags = response.body?.string()
+
+                // Removing the first set of strings
+                var generatedTagsString = generatedTags.toString().split("\"content\": ")[1]
+
+//                // Removing the last set of strings
+                generatedTagsString = generatedTagsString.split("},")[0]
+
+                // Removing the first character
+                generatedTagsString = generatedTagsString.substring(1)
+//
+                // Removing the last character
+                generatedTagsString = generatedTagsString.substring(0, generatedTagsString.length-1)
+                generatedTagsString = generatedTagsString.substring(0, generatedTagsString.length-1)
+
+                // Removing the "-" on the beginning  of every sentence
+                generatedTagsString = generatedTagsString.substring(2)
+
+
+                // Converting the string to a list of tags and removing the unnecessary element
+                val generatedTagsList = generatedTagsString.split("\\n- ").toMutableList()
+
+                // Adding the List to database
+                // Storing into database
+                FirebaseDatabase.getInstance().getReference()
+                    .child("Tags")
+                    .child(summaryTitle).setValue(generatedTagsList);
+
+
+
+
+                Log.i("Response from OPENAI on generating a mindmap", generatedTagsList.toString())
+
+            }
+        })
+
+    }
 
 
 }
