@@ -1,13 +1,10 @@
 package com.example.notegenie
 
-import android.content.Context
-import android.content.Intent
+import android.R.attr.text
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.service.autofill.UserData
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -15,12 +12,11 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import com.google.firebase.database.DataSnapshot
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
-import com.google.gson.JsonParser
-import com.google.gson.reflect.TypeToken
+import com.itextpdf.text.pdf.PdfReader
+import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -31,10 +27,10 @@ import okhttp3.Response
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.IOException
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.concurrent.TimeUnit
+
 
 class AddSummaryPage : AppCompatActivity() {
 
@@ -401,6 +397,8 @@ class AddSummaryPage : AppCompatActivity() {
         })
 
     }
+
+
 
 
 }

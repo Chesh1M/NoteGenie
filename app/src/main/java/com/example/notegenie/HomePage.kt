@@ -1,5 +1,6 @@
 package com.example.notegenie
 
+import android.R.attr.data
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -12,16 +13,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.documentfile.provider.DocumentFile
 import com.google.firebase.auth.FirebaseAuth
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import okhttp3.Call
@@ -188,7 +186,7 @@ class HomePage : AppCompatActivity() {
 
             // Audio is Picked in format of URI
             if (data != null) {
-                selectedFileURI = data.getData()!!
+                selectedFileURI = data.data!!
 
             }
 
@@ -213,73 +211,27 @@ class HomePage : AppCompatActivity() {
 
                 // Getting the folder path from user
                 val folderPathFromUser = "/Documents/Lecture Slides"
+                var filepath = selectedFileURI.path.toString()
+
+                // Removing the unnecessary string bits
+                filepath = filepath.drop(18)
 
                 // Appending it to make it look like a legit directory
-                val actualFolderPath = Environment.getExternalStorageDirectory().path.toString()+folderPathFromUser
+                val actualFolderPath = Environment.getExternalStorageDirectory()
+                    .path.toString()+"/"+filepath
 
-                // Getting all the files inside the directory
-                val lectureSlideFile = File(actualFolderPath)
-                val arrayOfLectureSlideFiles = lectureSlideFile.listFiles()
+                // Extracting text from pdf
+                val extractedTextFromPDF = convertPDFToText(actualFolderPath)
 
-                // Initializing a list for the content
-                val listOfContentPerPage = mutableListOf<String>()
+                // Changing the Intent to the Add Summary page
+                // Initializing a new intent to go to the next activity
+                val addSummaryPageIntent = Intent(this, AddSummaryPage:: class.java)
 
-                // Google ML-Kit
-                // When using Latin script library
-                val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+                // Pushing the data to the next activity
+                addSummaryPageIntent.putExtra("Summary Content", extractedTextFromPDF)
 
-                // Looping through all the slide images
-                for (i in arrayOfLectureSlideFiles.indices){
-
-                    // Getting the current file name
-                    val currFileDirectory = arrayOfLectureSlideFiles.get(i).toString()
-
-                    // Applying the Text recognition api from ML tool kit
-
-                    val image: InputImage
-                    try {
-                        // Input Image
-                        image = InputImage.fromFilePath(this, Uri.fromFile(File(currFileDirectory)))
-
-                        // Handling the request
-                        val result = recognizer.process(image)
-                            .addOnSuccessListener { visionText ->
-
-                                // Getting the content that ML Kit read
-                                listOfContentPerPage.add(visionText.text)
-
-                                // If it is the last page
-                                if (i == (arrayOfLectureSlideFiles.size)-1){
-
-                                    // Combining all the elements within that list
-                                    val rawContentOfLecture = listOfContentPerPage.joinToString("NEWPAGE")
-
-                                    // Changing the Intent to the Add Summary page
-                                    // Initializing a new intent to go to the next activity
-                                    val addSummaryPageIntent = Intent(this, AddSummaryPage:: class.java)
-
-                                    // Pushing the data to the next activity
-                                    addSummaryPageIntent.putExtra("Summary Content", rawContentOfLecture)
-
-                                    // Switching to the next activity
-                                    startActivity(addSummaryPageIntent)
-
-                                    Log.i("Lecture content", rawContentOfLecture)
-
-                                }
-                            }
-                            .addOnFailureListener { e ->
-                                Log.e("Error extracting text from image", e.toString())
-                            }
-
-                    } catch (e: IOException) {
-                        Log.i("The URI", Uri.fromFile(File(currFileDirectory)).toString())
-                        e.printStackTrace()
-                    }
-                }
-
-
-
+                // Going to the Add Summary Page
+                startActivity(addSummaryPageIntent)
 
 
 
@@ -344,22 +296,30 @@ class HomePage : AppCompatActivity() {
 
     }
 
-    // FUnction to get text from pdf
-    fun getTextFromPDF(pdfFilePath: Uri){
+    // Function to extract text from pdf
+    fun convertPDFToText(src: String?): String {
         try {
-            var parsedText = ""
-            val reader = PdfReader(pdfFilePath.path.toString())
-            val n: Int = reader.getNumberOfPages()
-            for (i in 0 until n) {
-                parsedText = """
-            ${parsedText + PdfTextExtractor.getTextFromPage(reader, i + 1).trim()}
-            
-            """.trimIndent() //Extracting the content from the different pages
+            //create pdf reader
+            val pr = PdfReader(src)
+
+            //get the number of pages in the document
+            val pNum = pr.numberOfPages
+
+            // Initializing the text variable
+            var finalText = ""
+
+            //extract text from each page and write it to the output text file
+            for (page in 1..pNum) {
+
+                //text is the required String (initialized as "" )
+                finalText = finalText + android.R.attr.text.toString() + PdfTextExtractor.getTextFromPage(pr, page)
             }
-            Toast.makeText(this, parsedText, Toast.LENGTH_LONG).show()
-            reader.close()
+
+            return finalText
+
         } catch (e: Exception) {
-            Log.e("Loading PDF Error", e.toString())
+            e.printStackTrace()
+            return "PDF READ ERROR"
         }
     }
 
@@ -500,7 +460,23 @@ class HomePage : AppCompatActivity() {
 
     }
 
-    // Function to convert from pdf to images for ML Kit to recognise
+    // Function to convert URI to path
+    fun convertUriToPath(selectedFileURI: Uri): String? {
+
+        // Initializing the file
+        val file = selectedFileURI.path?.let { File(it) } //create path from uri
+
+        // Doing file string manipulations
+        val split = file?.path?.split(":".toRegex())?.dropLastWhile { it.isEmpty() }
+            ?.toTypedArray() //split the path.
+
+        // Getting the file path
+        val filePath = split?.get(1) //assign it to a string(your choice).
+
+        // Returning the file path
+        return filePath
+
+    }
 
 
 
