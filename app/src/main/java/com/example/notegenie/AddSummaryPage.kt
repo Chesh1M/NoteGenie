@@ -19,6 +19,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
+import com.google.gson.JsonParser
+import com.google.gson.reflect.TypeToken
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -26,6 +28,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import org.json.JSONObject
+import org.json.JSONTokener
 import java.io.IOException
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -81,7 +85,7 @@ class AddSummaryPage : AppCompatActivity() {
 
 //        saveSummaryToFirebase("Circuit Analysis", currentDate, "This is very interesting")
 
-        callChatGPT("Summarize this for a second-grade student in minimum 500 words: $cleanedTextSummary"){response -> // "around 300 words" THIS IS IMPORTANT DO NOT REMOVE!!
+        callChatGPT("Summarize this for a second-grade student in minimum 1000 words: $cleanedTextSummary"){response -> // "around 300 words" THIS IS IMPORTANT DO NOT REMOVE!!
             runOnUiThread {
                 Log.i("Response from GPT", response.toString())
             }
@@ -152,20 +156,10 @@ class AddSummaryPage : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val transcribedText = response.body?.string()
 
+                // Parsing the necessary JSON values
+                var answerFromChatGPT = extractTextFromJSONResponseGPT35TURBO16K(transcribedText.toString(),
+                    "choices")
 
-
-                // Removing the first set of strings
-                var answerFromChatGPT = transcribedText.toString().split("\"content\": ")[1]
-
-//                // Removing the last set of strings
-                answerFromChatGPT = answerFromChatGPT.split("},")[0]
-
-                // Removing the first character
-                answerFromChatGPT = answerFromChatGPT.substring(1)
-//
-                // Removing the last character
-                answerFromChatGPT = answerFromChatGPT.substring(0, answerFromChatGPT.length-1)
-                answerFromChatGPT = answerFromChatGPT.substring(0, answerFromChatGPT.length-1)
 
                 // Removing a few newances
                 answerFromChatGPT = answerFromChatGPT.replace("\\n\\n", " ")
@@ -226,8 +220,8 @@ class AddSummaryPage : AppCompatActivity() {
                                 answerFromChatGPT = answerFromChatGPT.replace("\\n\\n", " ")
                                 answerFromChatGPT = answerFromChatGPT.replace("\\r", " ")
 
-
-                                generateMindMap(titleOfSummary.toString(),"Extract keywords (maximum 3 words each) from this text: $question, I just want the text in list form and nothing extra"){response -> //I just want the text in list form and nothing extra THIS IS IMPORTANT DO NOT REMOVE!!
+                                // Generating the mind-map
+                                generateMindMap(titleOfSummary.toString(),"Extract keywords (maximum 3 words each) from this text in bullet list form: $question, I just want the text in list form and nothing extra"){response -> //I just want the text in list form and nothing extra THIS IS IMPORTANT DO NOT REMOVE!!
                                     runOnUiThread {
                                         Log.i("Response from GPT", response.toString())
                                     }
@@ -315,6 +309,20 @@ class AddSummaryPage : AppCompatActivity() {
         }
     }
 
+    // Function to extract text from the JSON response
+    fun extractTextFromJSONResponseGPT35TURBO16K(response: String, elementToBeExtracted: String): String {
+
+        // Initializing the library
+        val jsonObject = JSONTokener(response).nextValue() as JSONObject
+
+        // Getting the appropriate element
+        val extractedElement = jsonObject.getJSONArray(elementToBeExtracted).getJSONObject(0).getJSONObject("message")
+            .getString("content")
+
+        // Returning the value
+        return extractedElement.toString()
+    }
+
     // Function to generate MegaMindMap
     fun generateMindMap(summaryTitle: String,generatedSummary: String, param: (Any) -> Unit){
 
@@ -339,26 +347,6 @@ class AddSummaryPage : AppCompatActivity() {
             .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
             .build()
 
-//        // Initializing the api key & link
-//        val apiKey = "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"
-//        val apiLink = "https://api.openai.com/v1/completions"
-//
-//        // Getting the parameters from OpenAI
-//        val requestBody = """{
-//  "model": "text-davinci-003",
-//  "prompt": "Say this is a test"
-//"""
-//
-//        // Getting a request from Openhttp
-//        val request = Request.Builder().url(apiLink)
-//            .addHeader("Content-Type", "application/json")
-//            .addHeader("Authorization", "Bearer $apiKey")
-//            .addHeader("model", "text-davinci-003")
-//            .addHeader("prompt", generatedSummary)
-//            .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
-//            .build()
-
-
         // Getting the value from Chat GPT
         client.newCall(request).enqueue(object: Callback {
 
@@ -370,25 +358,18 @@ class AddSummaryPage : AppCompatActivity() {
 
                 val generatedTags = response.body?.string()
 
-                // Removing the first set of strings
-                var generatedTagsString = generatedTags.toString().split("\"content\": ")[1]
-
-//                // Removing the last set of strings
-                generatedTagsString = generatedTagsString.split("},")[0]
-
-                // Removing the first character
-                generatedTagsString = generatedTagsString.substring(1)
-//
-                // Removing the last character
-                generatedTagsString = generatedTagsString.substring(0, generatedTagsString.length-1)
-                generatedTagsString = generatedTagsString.substring(0, generatedTagsString.length-1)
+                // Extracting the content from the JSON response
+                var generatedTagsString = extractTextFromJSONResponseGPT35TURBO16K(generatedTags.toString(),
+                    "choices")
 
                 // Removing the "-" on the beginning  of every sentence
                 generatedTagsString = generatedTagsString.substring(2)
 
+                Log.i("TAGSTAGS", generatedTagsString)
+
 
                 // Converting the string to a list of tags and removing the unnecessary element
-                val generatedTagsList = generatedTagsString.split("\\n- ").toMutableList()
+                val generatedTagsList = generatedTagsString.split("- ").toMutableList()
 
                 // Initializing a cleaned version
                 val cleanedGeneratedTagsList = mutableListOf<String>()

@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.util.Base64InputStream
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -19,7 +18,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -35,9 +33,7 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import okio.Path.Companion.toPath
 import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
 
 
@@ -409,6 +405,44 @@ class HomePage : AppCompatActivity() {
 
     }
 
+    private fun extractPDF() {
+        try {
+            // creating a string for
+            // storing our extracted text.
+            var extractedText = ""
+
+            // creating a variable for pdf reader
+            // and passing our PDF file in it.
+            val reader = PdfReader("res/raw/amiya_rout.pdf")
+
+            // below line is for getting number
+            // of pages of PDF file.
+            val n = reader.numberOfPages
+
+            // running a for loop to get the data from PDF
+            // we are storing that data inside our string.
+            for (i in 0 until n) {
+                extractedText = """
+                $extractedText${
+                    PdfTextExtractor.getTextFromPage(reader, i + 1).trim { it <= ' ' }
+                }
+                
+                """.trimIndent()
+                // to extract the PDF content from the different pages
+            }
+
+            // after extracting all the data we are
+            // setting that string value to our text view.
+            Log.i("Text From PDF", extractedText.toString())
+
+            // below line is used for closing reader.
+            reader.close()
+        } catch (e: java.lang.Exception) {
+            // for handling error while extracting the text file.
+            Log.i("Error","Error found is : \n$e")
+        }
+    }
+
 
     // Official function to request for permissions
     private fun requestPermission(){
@@ -465,6 +499,9 @@ class HomePage : AppCompatActivity() {
 
 
     }
+
+    // Function to convert from pdf to images for ML Kit to recognise
+
 
 
     companion object {
