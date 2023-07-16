@@ -19,6 +19,9 @@
         android:theme="@style/Theme.NoteGenie"
         tools:targetApi="31">
         <activity
+            android:name=".GeneratingSummaryLoadingScreen"
+            android:exported="false" />
+        <activity
             android:name=".AddSummaryPage"
             android:exported="false" />
         <activity

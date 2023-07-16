@@ -7,6 +7,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -18,6 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.os.postDelayed
 import androidx.documentfile.provider.DocumentFile
 import com.google.firebase.auth.FirebaseAuth
 import com.itextpdf.text.pdf.PdfReader
@@ -210,28 +213,51 @@ class HomePage : AppCompatActivity() {
             } else{ // The file is a collection of lecture slides
 
                 // Getting the folder path from user
-                val folderPathFromUser = "/Documents/Lecture Slides"
                 var filepath = selectedFileURI.path.toString()
 
                 // Removing the unnecessary string bits
                 filepath = filepath.drop(18)
 
-                // Appending it to make it look like a legit directory
+                // Appending it to make it look like a legit directory (For Local Device)
                 val actualFolderPath = Environment.getExternalStorageDirectory()
                     .path.toString()+"/"+filepath
+
+//                // For my s20+
+//                // Appending it to make it look like a legit directory
+//                val actualFolderPath = "/storage/self/primary/"+filepath
+
+
 
                 // Extracting text from pdf
                 val extractedTextFromPDF = convertPDFToText(actualFolderPath)
 
                 // Changing the Intent to the Add Summary page
-                // Initializing a new intent to go to the next activity
+                // Initializing a new intent to go to the next activity and also its loading screen
                 val addSummaryPageIntent = Intent(this, AddSummaryPage:: class.java)
+                val summaryLoadingScreenIntent = Intent(
+                    this,
+                    GeneratingSummaryLoadingScreen::class.java
+                )
 
                 // Pushing the data to the next activity
                 addSummaryPageIntent.putExtra("Summary Content", extractedTextFromPDF)
 
-                // Going to the Add Summary Page
-                startActivity(addSummaryPageIntent)
+
+                // Initializing a delay for the loading page
+                Handler(Looper.getMainLooper()).postDelayed({
+
+                    // Going to the Add Summary Page
+                    startActivity(addSummaryPageIntent)
+
+
+                    // on the below line we are finishing
+                    // our current activity.
+                    finish()
+                }, 40000)
+
+                startActivity(summaryLoadingScreenIntent)
+
+
 
 
 
