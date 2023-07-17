@@ -2,6 +2,7 @@ package com.example.notegenie
 
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -10,22 +11,36 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.FirebaseDatabase
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.Calendar
 
 
 class HomePage : AppCompatActivity() {
 
     private lateinit var firebaseAuth: FirebaseAuth
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
         firebaseAuth = FirebaseAuth.getInstance()
 
-        // Status bar color
+        // Getting today's date
+        val formatter = DateTimeFormatter.ofPattern("dd")
+        val todayDate = LocalDateTime.now().format(formatter)
+
+        // Initializing the widgets
+        val todaysDayTextView: TextView = findViewById(R.id.todaysDayTextView)
+        todaysDayTextView.text = todayDate.toString()
+
+            // Status bar color
         window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
 
         // Initializing the pop-up menu
