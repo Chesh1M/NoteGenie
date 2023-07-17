@@ -1,6 +1,5 @@
 package com.example.notegenie
 
-import android.R.attr.text
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -17,8 +16,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
-import com.itextpdf.text.pdf.PdfReader
-import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -157,6 +154,8 @@ class AddSummaryPage : AppCompatActivity() {
             override fun onResponse(call: Call, response: Response) {
                 val transcribedText = response.body?.string()
 
+                Log.i("Response from server Summary", transcribedText.toString()) //DO NOT REMOVE THIS!!
+
                 // Parsing the necessary JSON values
                 var answerFromChatGPT = extractTextFromJSONResponseGPT35TURBO16K(transcribedText.toString(),
                     "choices")
@@ -244,6 +243,14 @@ class AddSummaryPage : AppCompatActivity() {
                                     }
                                 }
 
+                                // Adding the Flashcard
+                                // Generating the mind-map
+                                addFlashCard(titleOfSummary.toString(),"Create at least 20 Question & Answer Flashcard pairs in the format (Q:, A:) from the following content: $question please stick to the format"){response -> //I just want the text in list form and nothing extra THIS IS IMPORTANT DO NOT REMOVE!!
+                                    runOnUiThread {
+                                        Log.i("Response from GPT", response.toString())
+                                    }
+                                }
+
                             }
                         }
 
@@ -317,10 +324,10 @@ class AddSummaryPage : AppCompatActivity() {
                 // If the element exists
                 Toast.makeText(this, "ADDING!", Toast.LENGTH_LONG).show()
 
-                // Storing into database
-                FirebaseDatabase.getInstance().getReference()
-                    .child("Summaries")
-                    .child(summaryName).child(summaryDate).setValue(summarisedSummaryContent);
+//                // Storing into database
+//                FirebaseDatabase.getInstance().getReference()
+//                    .child("Summaries")
+//                    .child(summaryName).child(summaryDate).setValue(summarisedSummaryContent);
 
             }
         }
@@ -375,6 +382,8 @@ class AddSummaryPage : AppCompatActivity() {
 
                 val generatedTags = response.body?.string()
 
+                Log.i("Response from server TAGS", generatedTags.toString()) //DO NOT REMOVE THIS!!
+
                 // Extracting the content from the JSON response
                 var generatedTagsString = extractTextFromJSONResponseGPT35TURBO16K(generatedTags.toString(),
                     "choices")
@@ -382,7 +391,6 @@ class AddSummaryPage : AppCompatActivity() {
                 // Removing the "-" on the beginning  of every sentence
                 generatedTagsString = generatedTagsString.substring(2)
 
-                Log.i("TAGSTAGS", generatedTagsString)
 
 
                 // Converting the string to a list of tags and removing the unnecessary element
@@ -416,6 +424,87 @@ class AddSummaryPage : AppCompatActivity() {
 
             }
         })
+
+    }
+
+    // Function to add the Flashcards into the database
+    fun addFlashCard(summaryTitle: String, question: String, param: (Any) -> Unit){
+
+        // Initializing the api key & link
+        val apiKey = "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"
+        val apiLink = "https://api.openai.com/v1/chat/completions"
+
+        // Getting the parameters from OpenAI
+        val requestBody = """{
+  "model": "gpt-3.5-turbo-16k",
+  "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "'$question'"}]
+}
+"""
+
+        // Getting a request from Openhttp
+        val request = Request.Builder().url(apiLink)
+            .addHeader("Content-Type", "application/json")
+            .addHeader("Authorization", "Bearer $apiKey")
+            .addHeader("model", "gpt-3.5-turbo-16k")
+            .addHeader("messages", "{\"role\": \"user\", \"content\": \"Hello!\"}")
+            .post(requestBody.toRequestBody("application/json".toMediaTypeOrNull()))
+            .build()
+
+        // Getting the value from Chat GPT
+        client.newCall(request).enqueue(object: Callback {
+
+            override fun onFailure(call: Call, e: IOException) {
+                Log.e("OPENAI call error", e.toString())
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+
+                val questionAndAnswersResponse = response.body?.string()
+
+                Log.i("Response from server Flash Cards", questionAndAnswersResponse.toString()) //DO NOT REMOVE THIS!!
+
+                // Extracting the content from the JSON response
+                val questionAndAnswersResponseString = extractTextFromJSONResponseGPT35TURBO16K(questionAndAnswersResponse.toString(),
+                    "choices")
+
+                // Initializing the list that is split into Q&A
+                val splitList = questionAndAnswersResponseString.split("Q: ").drop(1) // Removing the first element of a list
+
+                // Initializing a Map of Question & Answers
+                val mapOfQuestionAndAnswers = mutableMapOf<String, String>()
+
+                // Looping through the List
+                for (i in 0..splitList.size-1){
+
+                    // Extracting the answer
+                    val answer = splitList[i].split("A: ")[1]
+
+                    // Extracting the Question
+                    var question = splitList[i].split("A: ")[0]
+
+                    // Cleaning the key
+
+                    val re = Regex("[^A-Za-z0-9 ]")
+                    question = re.replace(question, "")
+
+                    // Adding the values to the map
+                    mapOfQuestionAndAnswers.put(question, answer)
+
+                }
+
+
+                // Looping through the values
+
+                // Adding the List to database
+                // Storing into database
+                FirebaseDatabase.getInstance().getReference()
+                    .child("Flashcards")
+                    .child(summaryTitle).setValue(mapOfQuestionAndAnswers);
+
+
+            }
+        })
+
 
     }
 
