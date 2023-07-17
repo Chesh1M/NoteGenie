@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".AddSummaryPage">
 
     <TextView
@@ -47,9 +48,9 @@
                 android:layout_height="24dp"
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="50dp"
-                android:hint="Summary Title"
                 android:background="@null"
                 android:fontFamily="@font/roboto_bold"
+                android:hint="Summary Title"
                 android:text=""
                 android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/modifiedDate"
@@ -72,18 +73,76 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/summaryConstrainedLayout"
+        android:layout_width="413dp"
+        android:layout_height="452dp"
+        android:layout_marginTop="37dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/summaryTitleCard"
+        tools:context=".GeneratingSummaryLoadingScreen">
+
+        <ImageView
+            android:id="@+id/loadingScreenBackgroundImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/loading_summary_page" />
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="300dp"
+            android:backgroundTint="#92C472"
+            android:foregroundTint="#92C472"
+            android:indeterminateTint="#92C472"
+            android:progressBackgroundTint="#92C472"
+            android:progressTint="#92C472"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/loadingScreenBackgroundImage" />
+
+        <TextView
+            android:id="@+id/thisWillTakeJustAMinuteTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="11dp"
+            android:layout_marginBottom="80dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="This will just take a minute..."
+            android:textSize="10sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     <ScrollView
-        android:id="@+id/scrollView2"
+        android:id="@+id/addSummaryContentScrollView"
         android:layout_width="match_parent"
         android:layout_height="450dp"
         android:layout_marginTop="40dp"
+        android:alpha="0"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/summaryTitleCard">
 
-        <LinearLayout
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/summaryConstrainedView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -93,8 +152,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fontFamily="serif"
-                android:text="TextView" />
-        </LinearLayout>
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
     <Button

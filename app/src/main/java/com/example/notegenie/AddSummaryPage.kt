@@ -9,10 +9,12 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.database.FirebaseDatabase
 import com.google.gson.Gson
 import com.itextpdf.text.pdf.PdfReader
@@ -53,6 +55,9 @@ class AddSummaryPage : AppCompatActivity() {
         val dateTextView: TextView = findViewById(R.id.modifiedDate)
         val saveButton: Button = findViewById(R.id.saveButton)
         val displaySummaryContentTextView: TextView = findViewById(R.id.summaryContentsView)
+
+
+
 
         // Setting the timeout for the client
         client.newBuilder().connectTimeout(60, TimeUnit.MINUTES)
@@ -172,6 +177,21 @@ class AddSummaryPage : AppCompatActivity() {
                     // Setting the text
                     displaySummaryContentTextView.text = answerFromChatGPT
 
+                    // Animating the loading screen out of existence once the answer is received
+
+                    // Initializing the loading screen
+                    val loadingScreen: ConstraintLayout = findViewById(R.id.summaryConstrainedLayout)
+
+                    // Initializing the actual view
+                    val generatedSummaryView: ScrollView = findViewById(R.id.addSummaryContentScrollView)
+
+                    // Animating out title loading screen
+                    loadingScreen.animate().alpha(0F)
+
+                    // Animating in the Scroll View
+                    generatedSummaryView.animate().alpha(1F)
+
+
                     // Setting an onclick listener for the Save Button
                     saveButton.setOnClickListener(View.OnClickListener { view ->
 
@@ -181,7 +201,7 @@ class AddSummaryPage : AppCompatActivity() {
                         // Checking if the summary is already in the database
                         // If the summary does not exist in database
                         FirebaseDatabase.getInstance().getReference().child("Summaries").get().addOnSuccessListener { it->
-
+                            FirebaseDatabase.getInstance().getReference().child("Summaries")
                             // Getting the data from the database
                             val dataFromDatabase  = it.value as Map<String, String>
 
@@ -191,7 +211,8 @@ class AddSummaryPage : AppCompatActivity() {
                             // Checking if the summary title exists in database
                             if (keysFromDatabase.contains(titleOfSummary.toString())){
 
-                                // Does not save
+                                // Warning the user that the file already exists in database
+                                summaryFileNameEditText.setText("File Already Exists! Choose another name")
 
                             }else{
 

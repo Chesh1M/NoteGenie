@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.postDelayed
 import androidx.documentfile.provider.DocumentFile
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import okhttp3.Call
@@ -243,19 +244,13 @@ class HomePage : AppCompatActivity() {
                 addSummaryPageIntent.putExtra("Summary Content", extractedTextFromPDF)
 
 
-                // Initializing a delay for the loading page
-                Handler(Looper.getMainLooper()).postDelayed({
-
-                    // Going to the Add Summary Page
-                    startActivity(addSummaryPageIntent)
+                // Going to the Add Summary Page
+                startActivity(addSummaryPageIntent)
 
 
-                    // on the below line we are finishing
-                    // our current activity.
-                    finish()
-                }, 40000)
 
-                startActivity(summaryLoadingScreenIntent)
+
+
 
 
 

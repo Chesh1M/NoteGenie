@@ -51,7 +51,7 @@
                 android:backgroundTint="#124970"
                 android:translationX="50dp"
                 app:cardCornerRadius="20dp"
-                app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+                app:layout_constraintBottom_toTopOf="@+id/addSummaryContentScrollView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView"
                 app:layout_constraintTop_toBottomOf="@+id/summaryTextView">
