@@ -1,5 +1,6 @@
 package com.example.notegenie
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -7,9 +8,11 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
@@ -18,7 +21,10 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
@@ -42,6 +48,9 @@ class HomePage : AppCompatActivity() {
 
             // Status bar color
         window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
+
+        // Calling the function for active recall
+        getListForActiveRecall()
 
         // Initializing the pop-up menu
 
@@ -202,7 +211,102 @@ class HomePage : AppCompatActivity() {
 
         }
     }
-    
+
+    // Function to get the list of content for revision
+    @SuppressLint("SimpleDateFormat")
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getListForActiveRecall() {
+
+        // Initializing a list of summary topics to be returned
+        val listOfSummaryTopics = mutableListOf<String>()
+
+        // Loading the cloud
+        val firebaseDatabaseSummaries = FirebaseDatabase.getInstance()
+            .getReference("Summaries")
+
+        // Initializing a date formatter
+        val dateFormat = SimpleDateFormat("dd-MM-yyyy")
+
+        // Initializing the calendar instances of the specific dates
+        val tomorrowDate = Calendar.getInstance()
+        val dateAfterOneWeek = Calendar.getInstance()
+        val dateAfterOneMonth = Calendar.getInstance()
+
+
+        // Adding the dates to get the specific times
+        tomorrowDate.add(Calendar.DAY_OF_YEAR, -1)
+        dateAfterOneWeek.add(Calendar.WEEK_OF_YEAR, -1)
+        dateAfterOneMonth.add(Calendar.MONTH, -1)
+
+
+        // Initializing the key target days into a list
+        val targetDays = listOf<String>(dateFormat.format(tomorrowDate.time).toString(),
+            dateFormat.format(dateAfterOneWeek.time).toString(),
+            dateFormat.format(dateAfterOneMonth.time).toString())
+
+        // Loading the values
+        firebaseDatabaseSummaries.get().addOnSuccessListener {it ->
+
+            // Initializing a layout
+            val layoutResId: Int = android.R.layout.simple_list_item_1
+
+            // Loading the data from the database
+            val retrievedMap = it.value as Map<String, String>
+
+            // Getting the content
+
+            // Getting the values associated with the root
+            val listOfValues = retrievedMap.values.toList()
+
+            // Setting it as strings
+            var listOfValuesString = listOfValues.joinToString()
+
+            // Removing the first square bracket from the list
+            listOfValuesString = listOfValuesString.substring(1)
+
+            // Removing the last square bracket
+            listOfValuesString = listOfValuesString.substring(0, listOfValuesString.length-1)
+
+
+            // Converting that string into a list
+            val listOfValuesArray = listOfValuesString.split("}, {")
+
+            // Initializing a list of keys
+            val listOfKeys = retrievedMap.keys.toList()
+
+            // Initializing a counter to loop through the keys
+            var keysCounter = 0
+
+            // Looping through the list of values
+            listOfValuesArray.forEach { value->
+
+                // Getting the last edited date
+                val lastEditedDate = value.take(10)
+
+                // If the value is in the list
+                if (lastEditedDate in targetDays){
+
+                    // Add the summary
+                    listOfSummaryTopics.add(listOfKeys[keysCounter])
+                }
+                // Updating the keys counter
+                keysCounter += 1
+            }
+
+            // Initializing an array adapter
+            val arraySummaryAdapter = ArrayAdapter(this, layoutResId, listOfSummaryTopics)
+
+            // Initializing a list view to display this on
+            val activeRecallListView: ListView = findViewById(R.id.activeRecallListView)
+
+            // Setting the adapter to the ListView
+            activeRecallListView.adapter = arraySummaryAdapter
+
+
+        }
+
+    }
+
 
     // Function to determine the suffix of the date
     fun dateSuffix(todayDate: String): String {
@@ -219,4 +323,6 @@ class HomePage : AppCompatActivity() {
         return "th"
 
     }
+
+
 }
