@@ -21,6 +21,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import com.google.firebase.database.FirebaseDatabase
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -45,7 +46,11 @@ class HomePage : AppCompatActivity() {
 
         // Initializing the widgets
         val todaysDayTextView: TextView = findViewById(R.id.todaysDayTextView)
-        todaysDayTextView.text = todayDate.toString()+dateSuffix(todayDate.toString())
+        todaysDayTextView.text = "Revision for: "+todayDate.toString()+dateSuffix(todayDate.toString())
+
+        // Fading the widget in
+        val forgettingCurveWidgetCardView: CardView = findViewById(R.id.forgettingCurveWidgetCardView)
+        forgettingCurveWidgetCardView.animate().alpha(1F).setDuration(3000L)
 
             // Status bar color
         window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
