@@ -38,7 +38,7 @@ class HomePage : AppCompatActivity() {
 
         // Initializing the widgets
         val todaysDayTextView: TextView = findViewById(R.id.todaysDayTextView)
-        todaysDayTextView.text = todayDate.toString()
+        todaysDayTextView.text = todayDate.toString()+dateSuffix(todayDate.toString())
 
             // Status bar color
         window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
@@ -201,5 +201,22 @@ class HomePage : AppCompatActivity() {
 
 
         }
+    }
+    
+
+    // Function to determine the suffix of the date
+    fun dateSuffix(todayDate: String): String {
+
+        // If it is 1
+        if (todayDate == "1"){
+            return "st"
+        }else if(todayDate == "2"){
+            return "nd"
+        } else if(todayDate == "3"){
+            return "rd"
+        }
+
+        return "th"
+
     }
 }
