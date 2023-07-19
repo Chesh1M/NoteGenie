@@ -62,7 +62,7 @@ class FlashcardsPage : AppCompatActivity() {
                 startActivity(switchActivity)
             } else if(menuID==3){
                 // Initializing an intent to switch activity
-                val switchActivity = Intent(this, StartActivity::class.java)
+                val switchActivity = Intent(this, SettingsPage::class.java)
                 startActivity(switchActivity)
             }
 

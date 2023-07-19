@@ -309,12 +309,6 @@ class HomePage : AppCompatActivity() {
                 Log.i("Transcribed text", transcribedText.toString())
             }
         })
-
-
-
-
-
-
     }
 
     // Function to extract text from pdf

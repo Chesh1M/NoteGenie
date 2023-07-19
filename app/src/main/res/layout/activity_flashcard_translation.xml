@@ -113,13 +113,13 @@
             android:id="@+id/questionCard"
             android:layout_width="match_parent"
             android:layout_height="450dp"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="15dp"
-            android:layout_marginEnd="20dp"
             android:background="#EC5800"
-            android:onClick="viewAnswer"
             android:orientation="vertical"
-            android:padding="15dp">
+            android:gravity="center"
+            android:padding="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:id="@+id/flashCardText"
@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/concert_one"
                 android:padding="10dp"
-                android:text="What is the partial derivative of         x^2 + 3x + 7y with respect to x?"
+                android:text=""
                 android:textColor="#FFFFFF"
                 android:textSize="35sp"
                 android:textStyle="bold"></TextView>
@@ -146,7 +146,7 @@
 
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/wrong_btn"
+                    android:id="@+id/wrongBtn"
                     android:layout_width="100dp"
                     android:layout_height="60dp"
                     android:layout_alignParentStart="true"
@@ -160,7 +160,7 @@
                 </androidx.appcompat.widget.AppCompatButton>
 
                 <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/correct_btn"
+                    android:id="@+id/correctBtn"
                     android:layout_width="100dp"
                     android:layout_height="60dp"
                     android:layout_alignParentStart="true"
@@ -170,7 +170,6 @@
                     android:layout_marginTop="100dp"
                     android:drawableRight="@drawable/tick"
                     android:background="@drawable/correct_btn">
-
                 </androidx.appcompat.widget.AppCompatButton>
             </RelativeLayout>
 
