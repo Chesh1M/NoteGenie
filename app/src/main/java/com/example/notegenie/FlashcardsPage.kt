@@ -151,15 +151,10 @@ class FlashcardsPage : AppCompatActivity() {
                 // Pushing the data to the next activity
                 flashCardTranslation.putExtra("Flash Card Title", flashCardTitle)
 
-                Log.i("Titlez", flashCardTitle)
-
                 // Switching to the next activity
                 startActivity(flashCardTranslation)
             }
 
-            // Displaying the content
-
-            Log.i("Extracted Content", listOfFlashCardDataObjects.toString())
     }
 
     }
