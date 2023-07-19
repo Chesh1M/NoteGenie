@@ -192,6 +192,7 @@ class SummaryPage : AppCompatActivity() {
             binding.listOfSummariesView.isClickable = true
             binding.listOfSummariesView.adapter =  SummariesArrayAdapter(this, listOfSumaries)
 
+
 //        // Fo to Mind map page when long pressed
 //        binding.listOfSummariesView.onItemLongClickListener{parent, view, position, id ->
 //

@@ -60,5 +60,22 @@
         app:srcCompat="@drawable/baseline_menu" />
     <!-- // HAMBURGER MENU -->
 
+    <ListView
+        android:id="@+id/listOfFlashCardsView"
+        android:layout_width="410dp"
+        android:layout_height="566dp"
+        android:layout_alignParentBottom="false"
+        android:layout_marginTop="19dp"
+        android:backgroundTint="#414C6B"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flashcardsTextView"
+        tools:listitem="@layout/activity_summary_card">
+
+    </ListView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

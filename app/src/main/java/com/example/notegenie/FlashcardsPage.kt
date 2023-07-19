@@ -3,6 +3,7 @@ package com.example.notegenie
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.widget.ImageView
 import android.widget.PopupMenu
@@ -10,10 +11,14 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.notegenie.databinding.ActivityFlashcardsPageBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 class FlashcardsPage : AppCompatActivity() {
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var binding: ActivityFlashcardsPageBinding
+
+    // Initializing the array list from the FlashCard Data.kt file
+    private lateinit var listOfFlashCards: ArrayList<FlashCardData>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,5 +79,91 @@ class FlashcardsPage : AppCompatActivity() {
         navigatePagesMenuView.setOnClickListener{
             navPopupMenu.show()
         }
+
+        getDataFromDatabase()
+    }
+
+    // Function to get the map from Firebase Database
+    fun getDataFromDatabase(){
+
+        // Loading the cloud
+        val firebaseDatabaseSummaries = FirebaseDatabase.getInstance()
+            .getReference("Flashcards")
+
+        // Loading the values
+        firebaseDatabaseSummaries.get().addOnSuccessListener {it ->
+
+            // Initializing a list of FlashCard Data Objects
+            val listOfFlashCardDataObjects = mutableListOf<FlashCardData>()
+
+            // Loading the values from the database
+            val retrievedMap = it.value as Map<String, Map<String, String>>
+
+            // Initializing the titles
+            val titles = retrievedMap.keys.toList()
+
+            // Loading the question and answer pairs
+            val questionAndAnswerPair = retrievedMap.values.toList()
+
+            // Initializing a counter to loop through the summaries
+            var counterSummary = 0
+
+            // Looping through the values
+            questionAndAnswerPair.forEach { pair ->
+
+                // Initializing the object
+                val flashCardDataObject = FlashCardData(titles[counterSummary], pair)
+
+                // Adding this object to the list
+                listOfFlashCardDataObjects.add(flashCardDataObject)
+
+                // Incrementing the counter
+                counterSummary += 1
+            }
+
+            //  Using the declared array list
+            listOfFlashCards = ArrayList()
+
+            for (i in titles.indices){
+
+                // Initializing an object with all the properties
+                val flashCard = FlashCardData(titles[i], questionAndAnswerPair[i])
+
+                // Setting these values into the array
+                listOfFlashCards.add(flashCard)
+            }
+
+            // Binding this array into the adapter
+            binding.listOfFlashCardsView.isClickable = true
+            binding.listOfFlashCardsView.adapter =  FlashCardsArrayAdapter(this,
+                listOfFlashCardDataObjects.toList() as ArrayList<FlashCardData>
+            )
+
+            // Open the new intent on click
+            binding.listOfFlashCardsView.setOnItemClickListener { parent, view, position, id ->
+
+                // Defining the variables to be pushed to the SummaryContentPage
+                val flashCardTitle = titles[position]
+                val flashCardContent = questionAndAnswerPair[position]
+
+                // Initializing a new intent to go to the next activity
+                val flashCardTranslation = Intent(this, FlashcardTranslation:: class.java)
+
+                // Pushing the data to the next activity
+                flashCardTranslation.putExtra("Flash Card Title", flashCardTitle)
+                flashCardTranslation.putExtra("Flash Card Content", flashCardContent.toString())
+
+                Log.i("Title", flashCardTitle)
+                Log.i("Flash Card Content", flashCardContent.toString())
+
+                // Switching to the next activity
+                startActivity(flashCardTranslation)
+            }
+
+            // Displaying the content
+
+            Log.i("Extracted Content", listOfFlashCardDataObjects.toString())
+    }
+
     }
 }
