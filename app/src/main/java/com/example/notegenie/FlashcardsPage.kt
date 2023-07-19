@@ -136,7 +136,7 @@ class FlashcardsPage : AppCompatActivity() {
             // Binding this array into the adapter
             binding.listOfFlashCardsView.isClickable = true
             binding.listOfFlashCardsView.adapter =  FlashCardsArrayAdapter(this,
-                listOfFlashCardDataObjects.toList() as ArrayList<FlashCardData>
+                listOfFlashCards
             )
 
             // Open the new intent on click
@@ -144,17 +144,14 @@ class FlashcardsPage : AppCompatActivity() {
 
                 // Defining the variables to be pushed to the SummaryContentPage
                 val flashCardTitle = titles[position]
-                val flashCardContent = questionAndAnswerPair[position]
 
                 // Initializing a new intent to go to the next activity
                 val flashCardTranslation = Intent(this, FlashcardTranslation:: class.java)
 
                 // Pushing the data to the next activity
                 flashCardTranslation.putExtra("Flash Card Title", flashCardTitle)
-                flashCardTranslation.putExtra("Flash Card Content", flashCardContent.toString())
 
-                Log.i("Title", flashCardTitle)
-                Log.i("Flash Card Content", flashCardContent.toString())
+                Log.i("Titlez", flashCardTitle)
 
                 // Switching to the next activity
                 startActivity(flashCardTranslation)
