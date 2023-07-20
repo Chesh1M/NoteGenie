@@ -18,6 +18,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -41,6 +42,8 @@ import okhttp3.Response
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 
@@ -75,6 +78,14 @@ class HomePage : AppCompatActivity() {
 
         // Status bar color
         window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
+
+        // Getting today's date
+        val formatter = DateTimeFormatter.ofPattern("dd")
+        val todayDate = LocalDateTime.now().format(formatter)
+
+        // Initializing the widgets
+        val todaysDayTextView: TextView = findViewById(R.id.todaysDayTextView)
+        todaysDayTextView.text = todayDate.toString()+dateSuffix(todayDate.toString())
 
         // Loading the list for active recall
         getListForActiveRecall()
