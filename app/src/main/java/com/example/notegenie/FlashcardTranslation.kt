@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.Menu
 import android.widget.ImageView
@@ -125,6 +126,9 @@ class FlashcardTranslation : AppCompatActivity() {
             // Firstly initializing the widget
             val languagesMenuView: ImageView = findViewById(R.id.changeLanguageImageView)
             val summaryContentsView: TextView = findViewById(R.id.flashCardText)
+
+            // Giving the scrollbar to the text view
+            summaryContentsView.movementMethod = ScrollingMovementMethod()
 
             // Now initializing the pop-up menu
             val changeLanguagePopupMenu = PopupMenu(this, languagesMenuView)
