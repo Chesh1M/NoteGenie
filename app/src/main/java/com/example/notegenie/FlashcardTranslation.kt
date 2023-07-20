@@ -1,6 +1,7 @@
 package com.example.notegenie
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -37,7 +38,11 @@ class FlashcardTranslation : AppCompatActivity() {
 
         /* HANDLING FLASHCARDS */
         // TODO: pass the topic from the main flashcard page into topic var
-        var topic = "Lasers"
+        //val previousIntent = Intent(this, FlashcardsPage::class.java)
+        val intent = intent
+
+        val topic = intent.getStringExtra("Flash Card Title").toString()
+        println("The topic is - $topic")
 
         val summaryContentsTextView: TextView = findViewById(R.id.flashCardText)
         val summaryContentCard: LinearLayout = findViewById(R.id.questionCard)

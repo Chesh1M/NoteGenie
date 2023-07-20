@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.versionedparcelable.VersionedParcelize
 import com.example.notegenie.databinding.ActivityFlashcardsPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -144,7 +145,7 @@ class FlashcardsPage : AppCompatActivity() {
 
                 // Defining the variables to be pushed to the SummaryContentPage
                 val flashCardTitle = titles[position]
-
+                println(flashCardTitle)
                 // Initializing a new intent to go to the next activity
                 val flashCardTranslation = Intent(this, FlashcardTranslation:: class.java)
 
