@@ -709,6 +709,29 @@ class HomePage : AppCompatActivity() {
             // Setting the adapter to the ListView
             activeRecallListView.adapter = arraySummaryAdapter
 
+            // What happens when an item is clicked
+
+            activeRecallListView.setOnItemClickListener { parent, view, position, id ->
+
+                // Initializing a new Intent
+                val flashCardTranslationIntent = Intent(this,
+                    FlashcardTranslation::class.java)
+
+                // Passing the title string into the FlashCard Intent if it is not "No revisions available"
+                if (listOfSummaryTopics[position] != "No revisions available"){
+
+                    // Pushing the data to the next activity
+                    flashCardTranslationIntent.putExtra("Flash Card Title",
+                        listOfSummaryTopics[position])
+
+                    // Switching to the next activity
+                    startActivity(flashCardTranslationIntent)
+                }else{
+                    Toast.makeText(this, "Nothing to review today!", Toast.LENGTH_LONG)
+                        .show() //DO NOT REMOVE
+                }
+            }
+
 
 
         }
