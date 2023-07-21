@@ -15,10 +15,12 @@ import android.view.Menu
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -513,6 +515,102 @@ class HomePage : AppCompatActivity() {
 
     }
 
+    // Function for the finder
+    fun finder(view: View){
+
+        // Initializing the text view
+        val finderEditText: EditText = findViewById(R.id.finderEditText)
+
+        // Getting the text from the textview
+        val searchPrompt = finderEditText.text
+
+        // Opening the Firebase Database
+        val firebaseDatabaseSummaries = FirebaseDatabase.getInstance()
+            .getReference("Summaries")
+
+        // Loading the values
+        firebaseDatabaseSummaries.get().addOnSuccessListener {it ->
+
+            // Loading the data from the database
+            val retrievedMap = it.value as Map<String, String>
+
+            // Getting the list of keys
+            val listOfKeys = retrievedMap.keys.toList()
+
+            // Initializing a boolean if match found
+            var promptFound = false
+
+            // Initializing a counter for the values list
+            var counterI = 0
+
+            // Looping through the prompt to get a match
+            listOfKeys.forEach { key ->
+
+                // Looking for a match
+                if (key.toString() == searchPrompt.toString()){
+                    // If there is a match
+                    promptFound = true
+
+                    // Getting the content
+
+                    // Getting the values associated with the root
+                    val listOfValues = retrievedMap.values.toList()
+
+                    // Setting it as strings
+                    var listOfValuesString = listOfValues.joinToString()
+
+                    // Removing the first square bracket from the list
+                    listOfValuesString = listOfValuesString.substring(1)
+
+                    // Removing the last square bracket
+                    listOfValuesString = listOfValuesString.substring(0, listOfValuesString.length-1)
+
+
+                    // Converting that string into a list
+                    val listOfValuesArray = listOfValuesString.split("}, {")
+
+                    // Getting the date
+                    val lastEditedDate = listOfValuesArray[counterI].take(10)
+
+                    // Getting the content
+                    val summaryContent = listOfValuesArray[counterI].drop(11)
+
+
+                    // Initializing a new intent to go to the next activity
+                    val displaySummaryContent = Intent(this, DisplaySummaryContent:: class.java)
+
+                    // Pushing the data to the next activity
+                    displaySummaryContent.putExtra("Summary Title", key)
+                    displaySummaryContent.putExtra("Edit Date", lastEditedDate)
+                    displaySummaryContent.putExtra("Summary Content", summaryContent)
+
+                    // Switching to the next activity
+                    startActivity(displaySummaryContent)
+
+                    // Setting the text to nothing once entered
+                    finderEditText.setText("")
+
+                }
+
+                // Updating the counter
+                counterI += 1
+
+
+            }
+
+            // If the prompt is false, toast an error message
+
+            if(promptFound == false){
+                // Toasting that the file does not exist
+                Toast.makeText(this, "File does not exist in database", Toast.LENGTH_LONG).show()
+            }
+
+
+
+        }
+    }
+
+
     // Function to get the list of content for revision
     @SuppressLint("SimpleDateFormat")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -592,6 +690,14 @@ class HomePage : AppCompatActivity() {
                 }
                 // Updating the keys counter
                 keysCounter += 1
+            }
+
+            // If the list is empty
+            if (listOfSummaryTopics.isEmpty()){
+
+                // Notify the user that no revisions are available
+                listOfSummaryTopics.add("No revisions available")
+
             }
 
             // Initializing an array adapter
