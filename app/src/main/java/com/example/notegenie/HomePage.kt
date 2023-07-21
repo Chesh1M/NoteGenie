@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
+import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.View
@@ -35,8 +36,14 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import okio.Path.Companion.toPath
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
+import java.nio.Buffer
+import java.nio.file.Files
+import java.nio.file.Paths
 
 
 class HomePage : AppCompatActivity() {
@@ -194,22 +201,28 @@ class HomePage : AppCompatActivity() {
 
             }
 
-            // Getting the type of the file
-            val fileType = "folder"
+            // Getting the type of the file TEMP
+            val fileType = "m4a"
 
             if (fileType == "m4a" || fileType=="mp3" || fileType=="wav"){
 
-                callCHATGPT("How are you today?"){response ->
+                // Getting the folder path from user
+                var filepath = selectedFileURI.path.toString()
+
+                // Removing the unnecessary string bits
+                filepath = filepath.drop(18)
+
+                // Appending it to make it look like a legit directory (For Local Device)
+                val actualFolderPath = Environment.getExternalStorageDirectory()
+                    .path.toString()+"/"+filepath
+
+                callWhisperModel(actualFolderPath){response -> // "around 300 words" THIS IS IMPORTANT DO NOT REMOVE!!
                     runOnUiThread {
                         Log.i("Response from GPT", response.toString())
                     }
                 }
 
-//                callWhisperModel(selectedFileURI){response ->
-//                    runOnUiThread {
-//                        Log.i("Response from whisper", response.toString())
-//                    }
-//                }
+
 
             } else{ // The file is a collection of lecture slides
 
@@ -263,19 +276,18 @@ class HomePage : AppCompatActivity() {
     // Function to call the Whisper model
     @OptIn(ExperimentalUnsignedTypes::class)
     @RequiresApi(Build.VERSION_CODES.O)
-    fun callWhisperModel(audioFilePath: Uri, callBack: (String) -> Unit){
+    fun callWhisperModel(audioFilePath: String, callBack: (String) -> Unit){
 
+        Log.i("File Path", audioFilePath)
 
-        // Setting the audio file path
-        val audioFilePathString = audioFilePath.path.toString()
-        val path = Environment.getExternalStorageDirectory().path.toString()
+        val decodedAudioFileMediaPlayer = Base64.encodeToString(Files.readAllBytes(Paths.get(audioFilePath)), 0)
 
-        Log.i("File Path", path+"/Lecture Recordings/Part 1.m4a")
-        val audioFileMediaPlayer = File("/storage/emulated/Lecture Recordings/whisperTest.wav")
-//        val audioFileMediaPlayerBytes = File("/storage/emulated/Lecture Recordings/Test.m4a").readBytes().asUByteArray()
+        // Writing to the file
+        base64StringToFile(decodedAudioFileMediaPlayer, audioFilePath)
 
-//        val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
-//        val base64File = Base64InputStream(inputStream, 1)
+        // Initializing the decoded file
+        val audioFileMediaPlayer = File(audioFilePath)
+
 
 
         // Initializing the api key & link
@@ -284,7 +296,7 @@ class HomePage : AppCompatActivity() {
 
         // Getting the parameters from OpenAI
         val requestBody = """{
-                                "file": "audio.mp3",
+                                "file": "$audioFileMediaPlayer",
                                 "model": "whisper-1"
                                 }
                                 """
@@ -293,7 +305,7 @@ class HomePage : AppCompatActivity() {
         val request = Request.Builder().url(apiLink)
             .addHeader("Authorization", "Bearer $apiKey")
             .addHeader("Content-Type", "multipart/form-data")
-            .addHeader("file", "$audioFileMediaPlayer")
+            .addHeader("file", "$audioFilePath")
             .addHeader("model", "whisper-1")
             .post(audioFileMediaPlayer.asRequestBody(MEDIA_TYPE_AUDIO))
             .build()
@@ -305,8 +317,8 @@ class HomePage : AppCompatActivity() {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                val transcribedText = response.body?.string()
-                Log.i("Transcribed text", transcribedText.toString())
+                val transcribedAudio = response.body?.string()
+                Log.i("Transcribed Audio", transcribedAudio.toString())
             }
         })
     }
@@ -378,44 +390,6 @@ class HomePage : AppCompatActivity() {
             }
         })
 
-    }
-
-    private fun extractPDF() {
-        try {
-            // creating a string for
-            // storing our extracted text.
-            var extractedText = ""
-
-            // creating a variable for pdf reader
-            // and passing our PDF file in it.
-            val reader = PdfReader("res/raw/amiya_rout.pdf")
-
-            // below line is for getting number
-            // of pages of PDF file.
-            val n = reader.numberOfPages
-
-            // running a for loop to get the data from PDF
-            // we are storing that data inside our string.
-            for (i in 0 until n) {
-                extractedText = """
-                $extractedText${
-                    PdfTextExtractor.getTextFromPage(reader, i + 1).trim { it <= ' ' }
-                }
-                
-                """.trimIndent()
-                // to extract the PDF content from the different pages
-            }
-
-            // after extracting all the data we are
-            // setting that string value to our text view.
-            Log.i("Text From PDF", extractedText.toString())
-
-            // below line is used for closing reader.
-            reader.close()
-        } catch (e: java.lang.Exception) {
-            // for handling error while extracting the text file.
-            Log.i("Error","Error found is : \n$e")
-        }
     }
 
 
@@ -493,6 +467,17 @@ class HomePage : AppCompatActivity() {
 
     }
 
+
+
+    // FUnction to convert from base-64 string to file
+    fun base64StringToFile(base64String: String, outputPath: String) {
+        val decodedByteArray = Base64.decode(base64String, Base64.DEFAULT)
+        val file = File(outputPath)
+
+        val outputStream = FileOutputStream(file)
+        outputStream.write(decodedByteArray)
+        outputStream.close()
+    }
 
 
     companion object {

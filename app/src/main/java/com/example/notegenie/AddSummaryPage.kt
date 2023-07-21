@@ -90,7 +90,7 @@ class AddSummaryPage : AppCompatActivity() {
         }
     }
 
-    // FUnction to call ChatGPT
+    // Function to call ChatGPT
     fun callChatGPT(question: String, param: (Any) -> Unit){
 
         // Getting the current date
@@ -507,6 +507,7 @@ class AddSummaryPage : AppCompatActivity() {
 
 
     }
+
 
 
 
