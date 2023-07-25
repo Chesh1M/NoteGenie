@@ -62,6 +62,7 @@ class HomePage : AppCompatActivity() {
     private lateinit var selectedFileURI: Uri
     private val RECORD_REQUEST_CODE = 111
     private val client = OkHttpClient()
+    private val numOfRecents = 5 // Get the total number of recent files from settings
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -819,12 +820,15 @@ class HomePage : AppCompatActivity() {
                 .toList().reversed().toMap() as MutableMap<String, LocalDate>
 
             // Getting only the list of Keys to be Displayed
-            val displayedListOfKeys = listOfLastEditedDates.keys.toList()
+            var displayedListOfKeys = listOfLastEditedDates.keys.toList()
 
 
 
 
             Log.i("24/7", listOfLastEditedDates.toString())
+
+            // Only displaying the  top 5 results
+            displayedListOfKeys = displayedListOfKeys.take(numOfRecents)
 
 
             // Initializing an array adapter
@@ -840,24 +844,23 @@ class HomePage : AppCompatActivity() {
 
             recentlyAddedListView.setOnItemClickListener { parent, view, position, id ->
 
-//                // Initializing a new Intent
-//                val flashCardTranslationIntent = Intent(this,
-//                    FlashcardTranslation::class.java)
-//
-//                // Passing the title string into the FlashCard Intent if it is not "No revisions available"
-//                if (listOfSummaryTopics[position] != "No revisions available"){
-//
-//                    // Pushing the data to the next activity
-//                    flashCardTranslationIntent.putExtra("Flash Card Title",
-//                        listOfSummaryTopics[position])
-//
-//                    // Switching to the next activity
-//                    startActivity(flashCardTranslationIntent)
-//                }else{
-//                    Toast.makeText(this, "Nothing to review today!", Toast.LENGTH_LONG)
-//                        .show() //DO NOT REMOVE
-//                }
-//            }
+                // Initializing a new Intent
+                val flashCardTranslationIntent = Intent(this,
+                    FlashcardTranslation::class.java)
+
+                // Passing the title string into the FlashCard Intent if it is not "No revisions available"
+                if (displayedListOfKeys[position] != "No revisions available"){
+
+                    // Pushing the data to the next activity
+                    flashCardTranslationIntent.putExtra("Flash Card Title",
+                        displayedListOfKeys[position])
+
+                    // Switching to the next activity
+                    startActivity(flashCardTranslationIntent)
+                }else{
+                    Toast.makeText(this, "Nothing to review today!", Toast.LENGTH_LONG)
+                        .show() //DO NOT REMOVE
+                }
 
 
 

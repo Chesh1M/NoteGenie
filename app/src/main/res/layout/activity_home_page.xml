@@ -61,13 +61,12 @@
                 android:fontFamily="@font/concert_one"
                 android:foregroundGravity="top|left"
                 android:gravity="left"
-                android:text="Recently
-                Added:"
+                android:text="Recent:"
                 android:textColor="#000000"
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
-                android:textSize="20sp"
+                android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -197,14 +196,14 @@
         android:layout_height="160dp"
         android:layout_marginStart="42dp"
         android:layout_marginTop="50dp"
-        android:layout_marginEnd="209dp"
+        android:layout_marginEnd="30dp"
         android:alpha="1"
         android:backgroundTint="#FFFFFF"
         android:foregroundGravity="top|center"
         android:padding="2dp"
         app:cardBackgroundColor="#EAE8E0"
         app:cardCornerRadius="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/recentlyAdded"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchBarCard">
 
@@ -241,7 +240,7 @@
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
                 android:textColorLink="#000000"
-                android:textSize="40sp"
+                android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
