@@ -10,6 +10,6 @@
     <color name="lightGrey">#DCDCDC</color>
     <color name="grey">#9E9E9E</color>
     <color name="bgColor">#414C6B</color>
-
+    <color name="summaryDisplayBgColor">#EAE8E0</color>
 
 </resources>

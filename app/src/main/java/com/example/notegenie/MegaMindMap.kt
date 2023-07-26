@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.children
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -30,6 +31,9 @@ class MegaMindMap : AppCompatActivity() {
     private lateinit var database: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // Status bar color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_mega_mind_map)
 

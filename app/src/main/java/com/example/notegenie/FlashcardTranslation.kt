@@ -3,7 +3,6 @@ package com.example.notegenie
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
@@ -14,6 +13,8 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import com.example.notegenie.databinding.ActivityFlashcardTranslationBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -27,6 +28,7 @@ class FlashcardTranslation : AppCompatActivity() {
 
     // Initializing Global Variables
     var CURRENT_LANGUAGE = "En"
+    var menuID = 0
 
     private lateinit var binding: ActivityFlashcardTranslationBinding
     private lateinit var database: DatabaseReference
@@ -37,16 +39,68 @@ class FlashcardTranslation : AppCompatActivity() {
         binding = ActivityFlashcardTranslationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Status bar color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
+
+        binding.flashcardsTranslationBackBtn.setOnClickListener {
+            val switchActivity = Intent(this, FlashcardsPage::class.java)
+            startActivity(switchActivity)
+        }
+
         /* HANDLING FLASHCARDS */
-        // TODO: pass the topic from the main flashcard page into topic var
-        //val previousIntent = Intent(this, FlashcardsPage::class.java)
+        // Get topic from previous intent
         val intent = intent
-
         val topic = intent.getStringExtra("Flash Card Title").toString()
-        println("The topic is - $topic")
 
-        val summaryContentsTextView: TextView = findViewById(R.id.flashCardText)
-        val summaryContentCard: LinearLayout = findViewById(R.id.questionCard)
+        // Initialize flashcard views
+        val flashcardsTextView: TextView = findViewById(R.id.flashCardText)
+        val flashcardCard: LinearLayout = findViewById(R.id.questionCard)
+        val flashcardsTitle: TextView = findViewById(R.id.flashcardTitle)
+        val summaryContentsView: TextView = findViewById(R.id.flashCardText)
+
+        // Function to translate text
+        fun translateText(textToTranslate: String, menuID: Int): String {
+
+            if (menuID == 1) {
+                /* START OF EN-CH TRANSLATION */
+                // Create an English-Chinese translator:
+                val options = TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.CHINESE)
+                    .build()
+                val englishChineseTranslator = Translation.getClient(options)
+
+                // Making sure that the model is available
+                val conditions = DownloadConditions.Builder()
+                    .requireWifi()
+                    .build()
+                englishChineseTranslator.downloadModelIfNeeded(conditions)
+                    .addOnSuccessListener {
+                        Log.i("Translation Load Status", "Sucessfully Translated")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.i("Translation Load Status", "Translation Model Load Failed")
+                        // Showing that the translation failed
+                        Toast.makeText(
+                            this, "Translation Model Load Failed",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                // Actually translating
+                englishChineseTranslator.translate(textToTranslate)
+                    .addOnSuccessListener { translatedText ->
+                        summaryContentsView.text = translatedText.toString()
+                        Log.i("Translation Status:", "Sucessfuly Translated")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.i("Translation Status:", "Error Translating")
+                    }
+
+                /* END OF EN-CH TRANSLATION */
+            }
+            return textToTranslate
+        }
 
         val database = FirebaseDatabase.getInstance().getReference("Flashcards").child("$topic")
         database.get().addOnSuccessListener {
@@ -57,11 +111,15 @@ class FlashcardTranslation : AppCompatActivity() {
             // Setting it as strings
             val listOfKeysString = listOfKeys.joinToString()
             // Converting that string into a list
-            val listOfSummaryTitles = listOfKeysString.split(", ")
+            val listOfQuestions = listOfKeysString.split(", ")
 
             // keep track of current qns/ans pair in the list
-            val sizeOfList = listOfSummaryTitles.size - 1
+            val sizeOfList = listOfQuestions.size - 1
             var i = 0
+
+            // Initialize `question to be displayed` variable
+            var questionToDisplay: String
+            var answerToDisplay: String?
 
             // to determine whether user has clicked on the flashcards to start
             var k = 0
@@ -71,7 +129,8 @@ class FlashcardTranslation : AppCompatActivity() {
             var b = 0
 
             // display flashcard welcome text
-            summaryContentsTextView.text = "Topic: $topic\nClick here to start!"
+            flashcardsTitle.text = "$topic"
+            flashcardsTextView.text = "Click here to start!"
 
             // Changes view to next question (only if current view is the answer)
             binding.correctBtn.setOnClickListener {
@@ -79,8 +138,8 @@ class FlashcardTranslation : AppCompatActivity() {
                     if (i == 0) {
                     }
                     else if (i < sizeOfList) {
-                        summaryContentsTextView.text = "${listOfSummaryTitles[i]}"
-                        summaryContentCard.setBackgroundColor(Color.parseColor("#EC5800"))
+                        translateText(listOfQuestions[i], menuID)
+                        flashcardCard.setBackgroundColor(Color.parseColor("#EC5800"))
                         a++
                     } else {
                         Toast.makeText(this, "End of flashcards", Toast.LENGTH_SHORT).show()
@@ -93,8 +152,8 @@ class FlashcardTranslation : AppCompatActivity() {
                     if (i == 0) {
                     }
                     else if (i < sizeOfList) {
-                        summaryContentsTextView.text = "${listOfSummaryTitles[i]}"
-                        summaryContentCard.setBackgroundColor(Color.parseColor("#EC5800"))
+                        translateText(listOfQuestions[i], menuID)
+                        flashcardCard.setBackgroundColor(Color.parseColor("#EC5800"))
                         a++
                     } else {
                         Toast.makeText(this, "End of flashcards", Toast.LENGTH_SHORT).show()
@@ -105,13 +164,31 @@ class FlashcardTranslation : AppCompatActivity() {
             binding.questionCard.setOnClickListener {
                 if (b == a) {
                     if (i == 0 && k == 0) {
-                        summaryContentsTextView.text = "${listOfSummaryTitles[0]}"
+                        translateText(listOfQuestions[i], menuID)
                         k++
                     } else if (i < sizeOfList) {
-                        summaryContentsTextView.text = "${retrievedMap[listOfSummaryTitles[i]]}"
-                        summaryContentCard.setBackgroundColor(Color.parseColor("#006DEC"))
+                        translateText(retrievedMap[listOfQuestions[i]]!!, menuID)
+                        flashcardCard.setBackgroundColor(Color.parseColor("#006DEC"))
                         i++
                         b++
+                    } else {
+                        Toast.makeText(this, "End of flashcards", Toast.LENGTH_SHORT).show()
+                    }
+                } else {}
+            }
+            // On click listener for the text itself (without this if user clicks the text itself the onclicklistener wouldn't respond, i.e. text doesn't count as the questionCard)
+            binding.flashCardText.setOnClickListener {
+                if (b == a) {
+                    if (i == 0 && k == 0) {
+                        translateText(listOfQuestions[i], menuID)
+                        k++
+                        println(menuID)
+                    } else if (i < sizeOfList) {
+                        translateText(retrievedMap[listOfQuestions[i]]!!, menuID)
+                        flashcardCard.setBackgroundColor(Color.parseColor("#006DEC"))
+                        i++
+                        b++
+                        println(menuID)
                     } else {
                         Toast.makeText(this, "End of flashcards", Toast.LENGTH_SHORT).show()
                     }
@@ -125,7 +202,7 @@ class FlashcardTranslation : AppCompatActivity() {
 
             // Firstly initializing the widget
             val languagesMenuView: ImageView = findViewById(R.id.changeLanguageImageView)
-            val summaryContentsView: TextView = findViewById(R.id.flashCardText)
+
 
             // Giving the scrollbar to the text view
             summaryContentsView.movementMethod = ScrollingMovementMethod()
@@ -143,7 +220,9 @@ class FlashcardTranslation : AppCompatActivity() {
             changeLanguagePopupMenu.setOnMenuItemClickListener { menuItem ->
 
                 // Getting id of menu
-                val menuID = menuItem.itemId
+                //val menuID = menuItem.itemId
+                menuID = menuItem.itemId
+                println(menuID)
 
                 // Handling navigation
                 if (menuID == 0) {
