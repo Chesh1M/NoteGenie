@@ -3,7 +3,6 @@ package com.example.notegenie
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
@@ -14,6 +13,8 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import com.example.notegenie.databinding.ActivityFlashcardTranslationBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -27,6 +28,8 @@ class FlashcardTranslation : AppCompatActivity() {
 
     // Initializing Global Variables
     var CURRENT_LANGUAGE = "En"
+    var menuID = 0
+    var question: Boolean = true // false will represent answer
 
     private lateinit var binding: ActivityFlashcardTranslationBinding
     private lateinit var database: DatabaseReference
@@ -37,17 +40,161 @@ class FlashcardTranslation : AppCompatActivity() {
         binding = ActivityFlashcardTranslationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        /* HANDLING FLASHCARDS */
-        // TODO: pass the topic from the main flashcard page into topic var
-        //val previousIntent = Intent(this, FlashcardsPage::class.java)
+        // Status bar color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.bgColor)
+
+        binding.flashcardsTranslationBackBtn.setOnClickListener {
+            val switchActivity = Intent(this, FlashcardsPage::class.java)
+            startActivity(switchActivity)
+        }
+
+        // Get topic from previous intent
         val intent = intent
-
         val topic = intent.getStringExtra("Flash Card Title").toString()
-        println("The topic is - $topic")
 
-        val summaryContentsTextView: TextView = findViewById(R.id.flashCardText)
-        val summaryContentCard: LinearLayout = findViewById(R.id.questionCard)
+        // Initialize flashcard views
+        val flashcardsTextView: TextView = findViewById(R.id.flashCardText)
+        val flashcardCard: LinearLayout = findViewById(R.id.questionCard)
+        val flashcardsTitle: TextView = findViewById(R.id.flashcardTitle)
 
+        // Function to translate text
+        fun translateText(textToTranslate: String, menuID: Int, question: Boolean): String {
+            /* START OF EN-CH TRANSLATION */
+            if (menuID == 1) {
+                // Create an English-Chinese translator:
+                val options = TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.CHINESE)
+                    .build()
+                val englishChineseTranslator = Translation.getClient(options)
+
+                // Making sure that the model is available
+                val conditions = DownloadConditions.Builder()
+                    .requireWifi()
+                    .build()
+                englishChineseTranslator.downloadModelIfNeeded(conditions)
+                    .addOnSuccessListener {
+                        Log.i("Translation Load Status", "Sucessfully Translated")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.i("Translation Load Status", "Translation Model Load Failed")
+                        // Showing that the translation failed
+                        Toast.makeText(
+                            this, "Translation Model Load Failed",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                // Actually translating
+                englishChineseTranslator.translate(textToTranslate)
+                    .addOnSuccessListener { translatedText ->
+                        flashcardsTextView.text = translatedText.toString()
+                        if (question) { // if translating question, change card background color to #EC5800
+                            flashcardCard.setBackgroundColor(Color.parseColor("#EC5800"))
+                        } else { // if translating answer, change card background color to #006DEC
+                            flashcardCard.setBackgroundColor(Color.parseColor("#006DEC"))
+                        }
+                        Log.i("Translation Status:", "Sucessfuly Translated")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.i("Translation Status:", "Error Translating")
+                    }
+                /* END OF EN-CH TRANSLATION */
+            }
+            /* START OF EN-TA TRANSLATION */
+            else if (menuID == 2) {
+                // Create an English-Tamil translator:
+                val options = TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.TAMIL)
+                    .build()
+                val englishTamilTranslator = Translation.getClient(options)
+
+                // Making sure that the model is available
+                val conditions = DownloadConditions.Builder()
+                    .requireWifi()
+                    .build()
+                englishTamilTranslator.downloadModelIfNeeded(conditions)
+                    .addOnSuccessListener {
+                        Log.i("Translation Load Status", "Sucessfully Translated")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.i("Translation Load Status", "Translation Model Load Failed")
+                        // Showing that the translation failed
+                        Toast.makeText(
+                            this, "Translation Model Load Failed",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                // Actually translating
+                englishTamilTranslator.translate(textToTranslate)
+                    .addOnSuccessListener { translatedText ->
+                        flashcardsTextView.text = translatedText.toString()
+                        if (question) { // if translating question, change card background color to #EC5800
+                            flashcardCard.setBackgroundColor(Color.parseColor("#EC5800"))
+                        } else { // if translating answer, change card background color to #006DEC
+                            flashcardCard.setBackgroundColor(Color.parseColor("#006DEC"))
+                        }
+                        Log.i("Translation Status:", "Sucessfuly Translated")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.i("Translation Status:", "Error Translating")
+                    }
+            } /* END OF EN-TA TRANSLATION */
+            /* START OF EN-MA TRANSLATION */
+            else if (menuID == 3) {
+                // Create an English-Malay translator:
+                val options = TranslatorOptions.Builder()
+                    .setSourceLanguage(TranslateLanguage.ENGLISH)
+                    .setTargetLanguage(TranslateLanguage.MALAY)
+                    .build()
+                val englishMalayTranslator = Translation.getClient(options)
+
+                // Making sure that the model is available
+                val conditions = DownloadConditions.Builder()
+                    .requireWifi()
+                    .build()
+                englishMalayTranslator.downloadModelIfNeeded(conditions)
+                    .addOnSuccessListener {
+                        Log.i("Translation Load Status", "Sucessfully Translated")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.i("Translation Load Status", "Translation Model Load Failed")
+                        // Showing that the translation failed
+                        Toast.makeText(
+                            this, "Translation Model Load Failed",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                // Actually translating
+                englishMalayTranslator.translate(textToTranslate)
+                    .addOnSuccessListener { translatedText ->
+                        flashcardsTextView.text = translatedText.toString()
+                        if (question) { // if translating question, change card background color to #EC5800
+                            flashcardCard.setBackgroundColor(Color.parseColor("#EC5800"))
+                        } else { // if translating answer, change card background color to #006DEC
+                            flashcardCard.setBackgroundColor(Color.parseColor("#006DEC"))
+                        }
+                        Log.i("Translation Status:", "Sucessfuly Translated")
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.i("Translation Status:", "Error Translating")
+                    }
+            } /* END OF EN-MA TRANSLATION */
+            else {
+                flashcardsTextView.text = textToTranslate
+                if (question) { // if translating question, change card background color to #EC5800
+                    flashcardCard.setBackgroundColor(Color.parseColor("#EC5800"))
+                } else { // if translating answer, change card background color to #006DEC
+                    flashcardCard.setBackgroundColor(Color.parseColor("#006DEC"))
+                }
+            }
+            return textToTranslate
+        }
+
+        /* HANDLING FLASHCARDS */
         val database = FirebaseDatabase.getInstance().getReference("Flashcards").child("$topic")
         database.get().addOnSuccessListener {
             // Loading the data from the database
@@ -57,11 +204,15 @@ class FlashcardTranslation : AppCompatActivity() {
             // Setting it as strings
             val listOfKeysString = listOfKeys.joinToString()
             // Converting that string into a list
-            val listOfSummaryTitles = listOfKeysString.split(", ")
+            val listOfQuestions = listOfKeysString.split(", ")
 
             // keep track of current qns/ans pair in the list
-            val sizeOfList = listOfSummaryTitles.size - 1
+            val sizeOfList = listOfQuestions.size - 1
             var i = 0
+
+            // Initialize `question to be displayed` variable
+            var questionToDisplay: String
+            var answerToDisplay: String?
 
             // to determine whether user has clicked on the flashcards to start
             var k = 0
@@ -71,7 +222,8 @@ class FlashcardTranslation : AppCompatActivity() {
             var b = 0
 
             // display flashcard welcome text
-            summaryContentsTextView.text = "Topic: $topic\nClick here to start!"
+            flashcardsTitle.text = "$topic"
+            flashcardsTextView.text = "Click here to start!"
 
             // Changes view to next question (only if current view is the answer)
             binding.correctBtn.setOnClickListener {
@@ -79,8 +231,8 @@ class FlashcardTranslation : AppCompatActivity() {
                     if (i == 0) {
                     }
                     else if (i < sizeOfList) {
-                        summaryContentsTextView.text = "${listOfSummaryTitles[i]}"
-                        summaryContentCard.setBackgroundColor(Color.parseColor("#EC5800"))
+                        question = true
+                        translateText(listOfQuestions[i], menuID, true)
                         a++
                     } else {
                         Toast.makeText(this, "End of flashcards", Toast.LENGTH_SHORT).show()
@@ -93,8 +245,8 @@ class FlashcardTranslation : AppCompatActivity() {
                     if (i == 0) {
                     }
                     else if (i < sizeOfList) {
-                        summaryContentsTextView.text = "${listOfSummaryTitles[i]}"
-                        summaryContentCard.setBackgroundColor(Color.parseColor("#EC5800"))
+                        question = true
+                        translateText(listOfQuestions[i], menuID, true)
                         a++
                     } else {
                         Toast.makeText(this, "End of flashcards", Toast.LENGTH_SHORT).show()
@@ -104,12 +256,32 @@ class FlashcardTranslation : AppCompatActivity() {
             // Changes view to answer (only if current view is on the question)
             binding.questionCard.setOnClickListener {
                 if (b == a) {
+                    // Change view to question only if it's the "Click here to start" card
                     if (i == 0 && k == 0) {
-                        summaryContentsTextView.text = "${listOfSummaryTitles[0]}"
+                        question = true
+                        translateText(listOfQuestions[i], menuID, true)
                         k++
                     } else if (i < sizeOfList) {
-                        summaryContentsTextView.text = "${retrievedMap[listOfSummaryTitles[i]]}"
-                        summaryContentCard.setBackgroundColor(Color.parseColor("#006DEC"))
+                        question = false
+                        translateText(retrievedMap[listOfQuestions[i]]!!, menuID, false)
+                        i++
+                        b++
+                    } else {
+                        Toast.makeText(this, "End of flashcards", Toast.LENGTH_SHORT).show()
+                    }
+                } else {}
+            }
+            // On click listener for the text itself (without this if user clicks the text itself the onclicklistener wouldn't respond, i.e. text doesn't count as the questionCard)
+            binding.flashCardText.setOnClickListener {
+                if (b == a) {
+                    // Change view to question only if it's the "Click here to start" card
+                    if (i == 0 && k == 0) {
+                        question = true
+                        translateText(listOfQuestions[i], menuID, true)
+                        k++
+                    } else if (i < sizeOfList) {
+                        question = false
+                        translateText(retrievedMap[listOfQuestions[i]]!!, menuID, false)
                         i++
                         b++
                     } else {
@@ -125,10 +297,9 @@ class FlashcardTranslation : AppCompatActivity() {
 
             // Firstly initializing the widget
             val languagesMenuView: ImageView = findViewById(R.id.changeLanguageImageView)
-            val summaryContentsView: TextView = findViewById(R.id.flashCardText)
 
             // Giving the scrollbar to the text view
-            summaryContentsView.movementMethod = ScrollingMovementMethod()
+            flashcardsTextView.movementMethod = ScrollingMovementMethod()
 
             // Now initializing the pop-up menu
             val changeLanguagePopupMenu = PopupMenu(this, languagesMenuView)
@@ -143,7 +314,9 @@ class FlashcardTranslation : AppCompatActivity() {
             changeLanguagePopupMenu.setOnMenuItemClickListener { menuItem ->
 
                 // Getting id of menu
-                val menuID = menuItem.itemId
+                //val menuID = menuItem.itemId
+                menuID = menuItem.itemId
+                println(menuID)
 
                 // Handling navigation
                 if (menuID == 0) {
@@ -157,6 +330,13 @@ class FlashcardTranslation : AppCompatActivity() {
                         this, "Language Changed to English",
                         Toast.LENGTH_SHORT
                     ).show()
+
+                    // Translating the text back to English
+                    if (question) {
+                        flashcardsTextView.text = listOfQuestions[i]
+                    } else {
+                        flashcardsTextView.text = retrievedMap[listOfQuestions[i]]
+                    }
 
                 } else if (menuID == 1) {
 
@@ -195,9 +375,9 @@ class FlashcardTranslation : AppCompatActivity() {
                         }
 
                     // Actually translating
-                    englishChineseTranslator.translate(summaryContentsView.text.toString())
+                    englishChineseTranslator.translate(flashcardsTextView.text.toString())
                         .addOnSuccessListener { translatedText ->
-                            summaryContentsView.text = translatedText.toString()
+                            flashcardsTextView.text = translatedText.toString()
                             Log.i("Translation Status:", "Sucessfuly Translated")
                         }
                         .addOnFailureListener { exception ->
@@ -242,9 +422,9 @@ class FlashcardTranslation : AppCompatActivity() {
                         }
 
                     // Actually translating
-                    englishTamilTranslator.translate(summaryContentsView.text.toString())
+                    englishTamilTranslator.translate(flashcardsTextView.text.toString())
                         .addOnSuccessListener { translatedText ->
-                            summaryContentsView.text = translatedText.toString()
+                            flashcardsTextView.text = translatedText.toString()
                             Log.i("Translation Status:", "Sucessfuly Translated")
                         }
                         .addOnFailureListener { exception ->
@@ -288,9 +468,9 @@ class FlashcardTranslation : AppCompatActivity() {
                         }
 
                     // Actually translating
-                    englishMalayTranslator.translate(summaryContentsView.text.toString())
+                    englishMalayTranslator.translate(flashcardsTextView.text.toString())
                         .addOnSuccessListener { translatedText ->
-                            summaryContentsView.text = translatedText.toString()
+                            flashcardsTextView.text = translatedText.toString()
                             Log.i("Translation Status:", "Sucessfuly Translated")
                         }
                         .addOnFailureListener { exception ->

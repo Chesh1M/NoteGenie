@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.example.notegenie.databinding.ActivityDisplaySummaryContentBinding
 import com.example.notegenie.databinding.ActivitySummaryCardBinding
 import com.google.mlkit.common.model.DownloadConditions
@@ -30,6 +31,9 @@ class DisplaySummaryContent : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDisplaySummaryContentBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Status bar color
+        window.statusBarColor = ContextCompat.getColor(this, R.color.summaryDisplayBgColor)
 
         // Getting the variables from the previous activity
         var summaryTitle =  intent.getStringExtra("Summary Title")

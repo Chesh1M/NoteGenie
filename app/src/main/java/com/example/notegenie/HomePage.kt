@@ -112,7 +112,6 @@ class HomePage : AppCompatActivity() {
             // Getting id of menu
             val menuID = menuItem.itemId
 
-
             // Handling navigation
             if (menuID==0){
 
@@ -133,17 +132,13 @@ class HomePage : AppCompatActivity() {
                 val switchActivity = Intent(this, SettingsPage::class.java)
                 startActivity(switchActivity)
             }
-
             false
-
-
         }
 
         // Setting an on click listener for the popup view
         navigatePagesMenuView.setOnClickListener{
             navPopupMenu.show()
         }
-
     }
 
     // Function to add a file
@@ -169,7 +164,6 @@ class HomePage : AppCompatActivity() {
             // Getting id of menu
             val menuID = menuItem.itemId
 
-
             // Handling navigation
             if (menuID==0){
 
@@ -192,15 +186,11 @@ class HomePage : AppCompatActivity() {
 //                // Starting the activity
                 startActivityForResult(Intent.createChooser(intentAudio, "Select File"), 1)
             }
-
             false
-
         }
 
         // Activating the pop-up menu
         navPopupMenu.show()
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -213,7 +203,6 @@ class HomePage : AppCompatActivity() {
             // Audio is Picked in format of URI
             if (data != null) {
                 selectedFileURI = data.data!!
-
             }
 
             // Getting the type of the file
@@ -250,7 +239,6 @@ class HomePage : AppCompatActivity() {
 //                val actualFolderPath = "/storage/self/primary/"+filepath
 
 
-
                 // Extracting text from pdf
                 val extractedTextFromPDF = convertPDFToText(actualFolderPath)
 
@@ -265,19 +253,8 @@ class HomePage : AppCompatActivity() {
                 // Pushing the data to the next activity
                 addSummaryPageIntent.putExtra("Summary Content", extractedTextFromPDF)
 
-
                 // Going to the Add Summary Page
                 startActivity(addSummaryPageIntent)
-
-
-
-
-
-
-
-
-
-
             }
         }
     }
@@ -286,7 +263,6 @@ class HomePage : AppCompatActivity() {
     @OptIn(ExperimentalUnsignedTypes::class)
     @RequiresApi(Build.VERSION_CODES.O)
     fun callWhisperModel(audioFilePath: Uri, callBack: (String) -> Unit){
-
 
         // Setting the audio file path
         val audioFilePathString = audioFilePath.path.toString()
@@ -298,7 +274,6 @@ class HomePage : AppCompatActivity() {
 
 //        val inputStream: FileInputStream = FileInputStream(audioFileMediaPlayer)
 //        val base64File = Base64InputStream(inputStream, 1)
-
 
         // Initializing the api key & link
         val apiKey = "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"
@@ -399,7 +374,6 @@ class HomePage : AppCompatActivity() {
                 Log.i("Question: $question", transcribedText.toString())
             }
         })
-
     }
 
     private fun extractPDF() {
@@ -466,35 +440,24 @@ class HomePage : AppCompatActivity() {
         val permissionRequest: MutableList<String> = ArrayList()
 
         if(!isReadPermissionGranted){
-
             permissionRequest.add(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-
         }
 
         if(!isManagePermissionGranted){
-
             permissionRequest.add(android.Manifest.permission.MANAGE_EXTERNAL_STORAGE)
-
         }
 
         if(!isInternetPermissionGranted){
-
             permissionRequest.add(android.Manifest.permission.INTERNET)
-
         }
 
         if(!isAccessNetworkStatePermissionGranted){
-
             permissionRequest.add(android.Manifest.permission.ACCESS_NETWORK_STATE)
-
         }
 
         if (permissionRequest.isNotEmpty()){
             permissionLauncher.launch(permissionRequest.toTypedArray())
         }
-
-
-
     }
 
     // Function to convert URI to path
@@ -512,7 +475,6 @@ class HomePage : AppCompatActivity() {
 
         // Returning the file path
         return filePath
-
     }
 
     // Function for the finder
@@ -631,12 +593,10 @@ class HomePage : AppCompatActivity() {
         val dateAfterOneWeek = Calendar.getInstance()
         val dateAfterOneMonth = Calendar.getInstance()
 
-
         // Adding the dates to get the specific times
         tomorrowDate.add(Calendar.DAY_OF_YEAR, -1)
         dateAfterOneWeek.add(Calendar.WEEK_OF_YEAR, -1)
         dateAfterOneMonth.add(Calendar.MONTH, -1)
-
 
         // Initializing the key target days into a list
         val targetDays = listOf<String>(dateFormat.format(tomorrowDate.time).toString(),
@@ -665,7 +625,6 @@ class HomePage : AppCompatActivity() {
 
             // Removing the last square bracket
             listOfValuesString = listOfValuesString.substring(0, listOfValuesString.length-1)
-
 
             // Converting that string into a list
             val listOfValuesArray = listOfValuesString.split("}, {")
@@ -731,11 +690,7 @@ class HomePage : AppCompatActivity() {
                         .show() //DO NOT REMOVE
                 }
             }
-
-
-
         }
-
     }
 
 
@@ -752,7 +707,6 @@ class HomePage : AppCompatActivity() {
         }
 
         return "th"
-
     }
 
 
