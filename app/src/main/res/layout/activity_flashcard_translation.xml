@@ -37,6 +37,7 @@
                 android:src="@drawable/left_arrow_icon"
                 android:layout_centerVertical="true"/>
 
+
         </RelativeLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -103,7 +104,7 @@
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
                 android:text="Partial Derivatives"
-                android:textColor="#FFFFFF"
+                android:textColor="#FFE45C"
                 android:textSize="20sp"
                 android:textStyle="bold"></TextView>
 
@@ -115,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="450dp"
             android:layout_marginTop="15dp"
-            android:background="#EC5800"
+            android:background="#FFD700"
             android:orientation="vertical"
             android:gravity="center"
             android:padding="15dp"

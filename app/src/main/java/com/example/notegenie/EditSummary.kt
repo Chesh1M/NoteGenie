@@ -12,58 +12,66 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.example.notegenie.databinding.ActivityDisplaySummaryContentBinding
+import com.example.notegenie.databinding.ActivityEditSummaryBinding
 import com.example.notegenie.databinding.ActivitySummaryCardBinding
 import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
 
-class DisplaySummaryContent : AppCompatActivity() {
+class EditSummary: AppCompatActivity() {
 
     // Initializing Global Variables
     var CURRENT_LANGUAGE = "En"
 
     // Initializing a binding
-    private lateinit var binding: ActivityDisplaySummaryContentBinding
+    private lateinit var binding: ActivityEditSummaryBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityDisplaySummaryContentBinding.inflate(layoutInflater)
+        binding = ActivityEditSummaryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Status bar color
-        window.statusBarColor = ContextCompat.getColor(this, R.color.summaryDisplayBgColor)
-
         // Getting the variables from the previous activity
-        var summaryTitle =  intent.getStringExtra("Summary Title")
+        var summaryTitle =  intent.getStringExtra("NAME_KEY")
         val summaryLastEditDate = intent.getStringExtra("Edit Date")
-        val summaryContent = intent.getStringExtra("Summary Content")
+        val summaryContent = intent.getStringExtra("CONTENT_KEY")
 
+        // Receive the content from DisplaySummaryContent activity
+        val receivedContent = intent.getStringExtra("Summary Content")
 
-        // Setting the title
-        val fullTitle = "Summary Of:\n" + summaryTitle
-        binding.summaryTextView.text = fullTitle
+        // Set up the EditText with the received content
+        binding.editTextSummaryContent.setText(receivedContent)
 
-        // Setting up the text views accordingly
-        binding.summaryContentsView.text = summaryContent
+        val openHomePage: Button = findViewById(R.id.exit)
 
-        // Find the button by its ID
-        val openEditSummary: Button = findViewById(R.id.editButton)
-        openEditSummary.setOnClickListener {
-            // Get the current content from the TextView
-            val currentContent = binding.summaryContentsView.text.toString()
+        // Set click listener on the button
+        openHomePage.setOnClickListener {
+            // Create an intent to open the second activity
+            val intent = Intent(this, HomePage::class.java)
+            startActivity(intent)
+            Toast.makeText(this, "Exit",
+                Toast.LENGTH_SHORT).show()
+        }
 
-            // Create an intent to open the EditSummary activity
-            val intent = Intent(this, EditSummary::class.java).apply {
-                putExtra("Summary Content", currentContent) // Pass the current content to EditSummary
+        val openDisplaySummaryContent: Button = findViewById(R.id.saveChanges)
+        openDisplaySummaryContent.setOnClickListener {
+            // Get the edited content from the EditText
+            val editedContent = binding.editTextSummaryContent.text.toString()
+
+            // Create an intent to open the DisplaySummaryContent activity
+            val intent = Intent(this, DisplaySummaryContent::class.java).apply {
+                putExtra("Summary Title", summaryTitle)
+                putExtra("Edit Date", summaryLastEditDate)
+                putExtra("Summary Content", editedContent) // Pass the edited content back
             }
             startActivity(intent)
+            Toast.makeText(this, "Changes have been saved successfully", Toast.LENGTH_SHORT).show()
         }
 
         // Setting the title
-        summaryTitle = "Summary Of:\n" + summaryTitle
+        summaryTitle = "Edit Summary"
 
         // Setting up the text views accordingly
         binding.summaryTextView.text = summaryTitle

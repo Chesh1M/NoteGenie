@@ -105,7 +105,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Account Settings"
-                        android:textColor="#FFFF00"
+                        android:textColor="#FFE45C"
                         android:textStyle="bold"
                         android:padding="10dp">
 
@@ -265,7 +265,7 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text="More"
-                    android:textColor="#FFFF00"
+                    android:textColor="#FFE45C"
                     android:textStyle="bold">
 
                 </TextView>

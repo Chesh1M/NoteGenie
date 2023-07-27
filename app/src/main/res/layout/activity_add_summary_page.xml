@@ -166,7 +166,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="37dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="#BEDE79"
+        android:backgroundTint="#FFD700"
         android:text="Save"
         android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -178,9 +178,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="#BEDE79"
+        android:backgroundTint="#414C6B"
         android:text="Edit"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

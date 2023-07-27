@@ -19,6 +19,9 @@
         android:theme="@style/Theme.NoteGenie"
         tools:targetApi="31">
         <activity
+            android:name=".EditSummary"
+            android:exported="false" />
+        <activity
             android:name=".FlashCardsCard"
             android:exported="false" />
         <activity
