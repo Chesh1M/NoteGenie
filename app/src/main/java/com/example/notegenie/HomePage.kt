@@ -19,6 +19,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.PopupMenu
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -44,9 +45,11 @@ import okhttp3.Response
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
 
 
 class HomePage : AppCompatActivity() {
@@ -60,6 +63,7 @@ class HomePage : AppCompatActivity() {
     private lateinit var selectedFileURI: Uri
     private val RECORD_REQUEST_CODE = 111
     private val client = OkHttpClient()
+    private val numOfRecents = 5 // Get the total number of recent files from settings
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -87,10 +91,13 @@ class HomePage : AppCompatActivity() {
 
         // Initializing the widgets
         val todaysDayTextView: TextView = findViewById(R.id.todaysDayTextView)
-        todaysDayTextView.text = todayDate.toString()+dateSuffix(todayDate.toString())
+        todaysDayTextView.text = "Active Recall: "+todayDate.toString()+dateSuffix(todayDate.toString())
 
         // Loading the list for active recall
         getListForActiveRecall()
+
+        // Loading the Last-edited dates
+        getRecentlyAddedSummaries()
 
         // Initializing the pop-up menu
 
@@ -693,6 +700,149 @@ class HomePage : AppCompatActivity() {
         }
     }
 
+    // Function to get the recently added Summaries
+    // Function to get the list of content for revision
+    @SuppressLint("SimpleDateFormat")
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getRecentlyAddedSummaries() {
+
+        // Initializing a list of summary topics to be returned
+        val listOfSummaryTopics = mutableListOf<String>()
+
+        // Loading the cloud
+        val firebaseDatabaseSummaries = FirebaseDatabase.getInstance()
+            .getReference("Summaries")
+
+        // Loading the values
+        firebaseDatabaseSummaries.get().addOnSuccessListener {it ->
+
+            // Initializing a layout
+            val layoutResId: Int = android.R.layout.simple_list_item_1
+
+            // Loading the data from the database
+            val retrievedMap = it.value as Map<String, String>
+
+            // Getting the content
+
+            // Getting the values associated with the root
+            val listOfValues = retrievedMap.values.toList()
+
+            // Initializing a list for last-edited dates
+            var listOfLastEditedDates = mutableMapOf<String, LocalDate>()
+//
+//            mapOfValues.forEach { value->
+//                listOfLastEditedDates.add(value.take(10))
+//            }
+//
+//            Log.i("24/7", listOfLastEditedDates.toString())
+
+//            // Getting the list of last-edited dates
+//            val listOfLastEditedDates = mapOfValues
+
+            // Setting it as strings
+            var listOfValuesString = listOfValues.joinToString()
+//
+            // Removing the first square bracket from the list
+            listOfValuesString = listOfValuesString.substring(1)
+
+            // Removing the last square bracket
+            listOfValuesString = listOfValuesString.substring(0, listOfValuesString.length-1)
+
+
+            // Converting that string into a list
+            val listOfValuesArray = listOfValuesString.split("}, {")
+
+            // Initializing a list of keys
+            val listOfKeys = retrievedMap.keys.toList()
+
+            // Getting the number of files
+            val numOfFiles = listOfKeys.size
+
+
+            // Initializing the view to display the size
+            val storageSizeProgressBar: ProgressBar = findViewById(R.id.storageSizeProgressBar)
+            val progressTextView: TextView = findViewById(R.id.progressTextView)
+
+            // Setting the text for the text view
+            progressTextView.text = numOfFiles.toString()+"/1000"
+
+            // Setting the maximum allowed
+            storageSizeProgressBar.max = 1000
+
+            // Setting the Progress Bar
+            storageSizeProgressBar.setProgress(numOfFiles, true)
+            storageSizeProgressBar
+
+
+            // Initializing a counter to loop through the keys
+            var keysCounter = 0
+
+            // Initializing a date-time formatter
+            val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy", Locale.ENGLISH)
+
+            // Adding the last edited dates to the necessary keys
+            listOfValuesArray.forEach { value->
+
+                // Adding the values into the map
+                listOfLastEditedDates.put(listOfKeys[keysCounter], LocalDate.parse(value.take(10), formatter))
+
+                // Incrementing the counter
+                keysCounter += 1
+            }
+
+            // Sorting the list and reversing it
+            listOfLastEditedDates = listOfLastEditedDates.toList().sortedBy { it.second }.toMap()
+                .toList().reversed().toMap() as MutableMap<String, LocalDate>
+
+            // Getting only the list of Keys to be Displayed
+            var displayedListOfKeys = listOfLastEditedDates.keys.toList()
+
+
+
+
+            Log.i("24/7", listOfLastEditedDates.toString())
+
+            // Only displaying the  top 5 results
+            displayedListOfKeys = displayedListOfKeys.take(numOfRecents)
+
+
+            // Initializing an array adapter
+            val arraySummaryAdapter = ArrayAdapter(this, layoutResId, displayedListOfKeys)
+
+            // Initializing a list view to display this on
+            val recentlyAddedListView: ListView = findViewById(R.id.recentlyAddedListView)
+
+            // Setting the adapter to the ListView
+            recentlyAddedListView.adapter = arraySummaryAdapter
+
+            // What happens when an item is clicked
+
+            recentlyAddedListView.setOnItemClickListener { parent, view, position, id ->
+
+                // Initializing a new Intent
+                val flashCardTranslationIntent = Intent(this,
+                    FlashcardTranslation::class.java)
+
+                // Passing the title string into the FlashCard Intent if it is not "No revisions available"
+                if (displayedListOfKeys[position] != "No revisions available"){
+
+                    // Pushing the data to the next activity
+                    flashCardTranslationIntent.putExtra("Flash Card Title",
+                        displayedListOfKeys[position])
+
+                    // Switching to the next activity
+                    startActivity(flashCardTranslationIntent)
+                }else{
+                    Toast.makeText(this, "Nothing to review today!", Toast.LENGTH_LONG)
+                        .show() //DO NOT REMOVE
+                }
+
+
+
+        }
+        }
+
+    }
 
     // Function to determine the suffix of the date
     fun dateSuffix(todayDate: String): String {
