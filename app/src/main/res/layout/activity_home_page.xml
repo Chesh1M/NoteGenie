@@ -20,16 +20,18 @@
         android:id="@+id/storageLimitCard"
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:layout_marginStart="27dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="40dp"
         android:alpha="1"
         android:backgroundTint="#EAE8E0"
         android:foregroundGravity="top|center"
         android:padding="2dp"
         app:cardBackgroundColor="#EAE8E0"
         app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/addFileButton"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toStartOf="@+id/recentlyAdded"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/forgettingCurveWidgetCardView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -87,9 +89,8 @@
         android:id="@+id/recentlyAdded"
         android:layout_width="160dp"
         android:layout_height="160dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="41dp"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="36dp"
         android:alpha="1"
         android:backgroundTint="#EAE8E0"
         android:foregroundGravity="top|center"
@@ -97,8 +98,8 @@
         app:cardBackgroundColor="#EAE8E0"
         app:cardCornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/forgettingCurveWidgetCardView"
-        app:layout_constraintTop_toBottomOf="@+id/searchBarCard">
+        app:layout_constraintStart_toEndOf="@+id/storageLimitCard"
+        app:layout_constraintTop_toBottomOf="@+id/forgettingCurveWidgetCardView">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -128,7 +129,7 @@
                 android:fontFamily="@font/concert_one"
                 android:foregroundGravity="top|left"
                 android:gravity="left"
-                android:text="Recent:"
+                android:text="Recents:"
                 android:textColor="#000000"
                 android:textColorHighlight="#000000"
                 android:textColorHint="#000000"
@@ -259,18 +260,18 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/forgettingCurveWidgetCardView"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
-        android:layout_marginStart="42dp"
+        android:layout_width="355dp"
+        android:layout_height="167dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginEnd="36dp"
         android:alpha="1"
         android:backgroundTint="#EAE8E0"
         android:foregroundGravity="top|center"
         android:padding="2dp"
         app:cardBackgroundColor="#EAE8E0"
         app:cardCornerRadius="20dp"
-        app:layout_constraintEnd_toStartOf="@+id/recentlyAdded"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchBarCard">
 
@@ -294,9 +295,9 @@
 
             <TextView
                 android:id="@+id/todaysDayTextView"
-                android:layout_width="145dp"
-                android:layout_height="42dp"
-                android:layout_marginStart="8dp"
+                android:layout_width="323dp"
+                android:layout_height="39dp"
+                android:layout_marginStart="7dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="7dp"
                 android:fontFamily="@font/concert_one"
@@ -309,6 +310,7 @@
                 android:textColorLink="#000000"
                 android:textSize="30sp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.6"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>

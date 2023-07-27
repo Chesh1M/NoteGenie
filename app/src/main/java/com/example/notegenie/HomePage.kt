@@ -91,7 +91,7 @@ class HomePage : AppCompatActivity() {
 
         // Initializing the widgets
         val todaysDayTextView: TextView = findViewById(R.id.todaysDayTextView)
-        todaysDayTextView.text = todayDate.toString()+dateSuffix(todayDate.toString())
+        todaysDayTextView.text = "Active Recall: "+todayDate.toString()+dateSuffix(todayDate.toString())
 
         // Loading the list for active recall
         getListForActiveRecall()
