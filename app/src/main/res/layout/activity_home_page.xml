@@ -22,7 +22,6 @@
         android:layout_height="160dp"
         android:layout_marginStart="23dp"
         android:layout_marginTop="26dp"
-        android:layout_marginEnd="40dp"
         android:alpha="1"
         android:backgroundTint="#EAE8E0"
         android:foregroundGravity="top|center"
@@ -90,7 +89,7 @@
         android:layout_width="160dp"
         android:layout_height="160dp"
         android:layout_marginTop="26dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginEnd="30dp"
         android:alpha="1"
         android:backgroundTint="#EAE8E0"
         android:foregroundGravity="top|center"
@@ -260,11 +259,11 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/forgettingCurveWidgetCardView"
-        android:layout_width="355dp"
-        android:layout_height="167dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="36dp"
+        android:layout_width="332dp"
+        android:layout_height="162dp"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="41dp"
         android:alpha="1"
         android:backgroundTint="#EAE8E0"
         android:foregroundGravity="top|center"
@@ -295,7 +294,7 @@
 
             <TextView
                 android:id="@+id/todaysDayTextView"
-                android:layout_width="323dp"
+                android:layout_width="306dp"
                 android:layout_height="39dp"
                 android:layout_marginStart="7dp"
                 android:layout_marginTop="16dp"
