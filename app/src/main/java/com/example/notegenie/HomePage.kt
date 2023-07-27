@@ -19,6 +19,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.ListView
 import android.widget.PopupMenu
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -798,6 +799,25 @@ class HomePage : AppCompatActivity() {
 
             // Initializing a list of keys
             val listOfKeys = retrievedMap.keys.toList()
+
+            // Getting the number of files
+            val numOfFiles = listOfKeys.size
+
+
+            // Initializing the view to display the size
+            val storageSizeProgressBar: ProgressBar = findViewById(R.id.storageSizeProgressBar)
+            val progressTextView: TextView = findViewById(R.id.progressTextView)
+
+            // Setting the text for the text view
+            progressTextView.text = numOfFiles.toString()+"/1000"
+
+            // Setting the maximum allowed
+            storageSizeProgressBar.max = 1000
+
+            // Setting the Progress Bar
+            storageSizeProgressBar.setProgress(numOfFiles, true)
+            storageSizeProgressBar
+
 
             // Initializing a counter to loop through the keys
             var keysCounter = 0
