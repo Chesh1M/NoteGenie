@@ -35,13 +35,11 @@
         android:layout_marginStart="7dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="103dp"
-        android:layout_marginBottom="16dp"
         android:fontFamily="@font/manrope_extrabold"
         android:gravity="left"
         android:text="Summaries"
         android:textColor="#FFFFFF"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/searchBarCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.272"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,14 +47,14 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginTop="30dp"
+        android:layout_width="410dp"
+        android:layout_height="566dp"
+        android:layout_marginTop="40dp"
         android:layout_marginBottom="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchBarCard">
+        app:layout_constraintTop_toBottomOf="@+id/flashCardsTextView">
 
         <ListView
             android:id="@+id/listOfSummariesView"
@@ -70,58 +68,6 @@
 
         </ListView>
     </RelativeLayout>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/searchBarCard"
-        android:layout_width="328dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="38dp"
-        android:foregroundGravity="top|center"
-        android:translationY="10dp"
-        app:cardBackgroundColor="#EAE8E0"
-        app:cardCornerRadius="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/_dynamic"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/flashCardsTextView">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/searchIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/baseline_search_icon"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <EditText
-                android:id="@+id/summarySearchEditText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="50dp"
-                android:width="248dp"
-                android:height="32dp"
-                android:background="@null"
-                android:ems="10"
-                android:hint="Search My Summaries"
-                android:inputType="text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.421"
-                app:layout_constraintStart_toEndOf="@+id/searchIcon"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
 
 
     <!-- HAMBURGER MENU -->
