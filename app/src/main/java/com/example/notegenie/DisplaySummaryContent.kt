@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -40,27 +39,6 @@ class DisplaySummaryContent : AppCompatActivity() {
         var summaryTitle =  intent.getStringExtra("Summary Title")
         val summaryLastEditDate = intent.getStringExtra("Edit Date")
         val summaryContent = intent.getStringExtra("Summary Content")
-
-
-        // Setting the title
-        val fullTitle = "Summary Of:\n" + summaryTitle
-        binding.summaryTextView.text = fullTitle
-
-        // Setting up the text views accordingly
-        binding.summaryContentsView.text = summaryContent
-
-        // Find the button by its ID
-        val openEditSummary: Button = findViewById(R.id.editButton)
-        openEditSummary.setOnClickListener {
-            // Get the current content from the TextView
-            val currentContent = binding.summaryContentsView.text.toString()
-
-            // Create an intent to open the EditSummary activity
-            val intent = Intent(this, EditSummary::class.java).apply {
-                putExtra("Summary Content", currentContent) // Pass the current content to EditSummary
-            }
-            startActivity(intent)
-        }
 
         // Setting the title
         summaryTitle = "Summary Of:\n" + summaryTitle

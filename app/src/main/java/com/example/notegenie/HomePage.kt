@@ -848,11 +848,11 @@ class HomePage : AppCompatActivity() {
     fun dateSuffix(todayDate: String): String {
 
         // If it is 1
-        if (todayDate == "1"){
+        if (todayDate.takeLast(1) == "1"){
             return "st"
-        }else if(todayDate == "2"){
+        }else if(todayDate.takeLast(1) == "2"){
             return "nd"
-        } else if(todayDate == "3"){
+        } else if(todayDate.takeLast(1) == "3"){
             return "rd"
         }
 
