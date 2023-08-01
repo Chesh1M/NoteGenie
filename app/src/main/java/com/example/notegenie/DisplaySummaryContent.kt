@@ -1,12 +1,18 @@
 package com.example.notegenie
 
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
@@ -18,19 +24,25 @@ import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.TranslateLanguage
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
+import java.io.File
 
 class DisplaySummaryContent : AppCompatActivity() {
 
     // Initializing Global Variables
     var CURRENT_LANGUAGE = "En"
 
+    private val STORAGE_CODE: Int = 100
+
     // Initializing a binding
     private lateinit var binding: ActivityDisplaySummaryContentBinding
-
+    private lateinit var exportButton: Button
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDisplaySummaryContentBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // Setting up the export button
+        exportButton = findViewById(R.id.exportButton)
 
         // Status bar color
         window.statusBarColor = ContextCompat.getColor(this, R.color.summaryDisplayBgColor)
@@ -226,14 +238,56 @@ class DisplaySummaryContent : AppCompatActivity() {
             changeLanguagePopupMenu.show()
         }
 
+        exportButton.setOnClickListener {
+//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R){
+//                //system OS >= Marshmallow(6.0), check permission is enabled or not
+//                if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                    == PackageManager.PERMISSION_DENIED){
+//                    //permission was not granted, request it
+//                    val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                    requestPermissions(permissions, STORAGE_CODE)
+//                }
+//                else{
+//                    //permission already granted, call savePdf() method
+//                    exportToPDF()
+//                }
+//            }
+//            else{
+//                //system OS < marshmallow, call savePdf() method
+//                exportToPDF()
+//            }
 
+            exportToPDF()
+        }
 
 
 
     }
 
     // Function to export to pdf
-    fun exportToPDF(view: View){
+    fun exportToPDF(){
+        val pdf = PdfDocument()
+        val page = pdf.startPage(PdfDocument.PageInfo.Builder(
+            792, 1120, 1).create())
+        val canvas = page.canvas
+        val paint = Paint()
 
+        val text = ""
+        try {
+            paint.textSize = 15F
+            canvas.drawText(text,100F,200F,paint )
+            pdf.finishPage(page)
+
+            val fileName = "doc${System.currentTimeMillis()}.pdf"
+            val file = File(getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), fileName)
+
+            pdf.writeTo(file.outputStream())
+            pdf.close()
+
+            Toast.makeText(applicationContext, "$fileName has been created", Toast.LENGTH_SHORT).show()
+        }
+        catch (e: Exception) {
+            Toast.makeText(applicationContext, "Error: ${e.toString()}", Toast.LENGTH_SHORT).show()
+        }
     }
 }
